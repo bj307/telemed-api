@@ -49,7 +49,22 @@ export class AdmService {
 
       return showAdm;
     } catch (error) {
-      throw new Error('Erro ao criar: ' + error.message);
+      throw new Error('Erro ao buscar: ' + error.message);
+    }
+  }
+
+  async findByEmail(email: string): Promise<ShowAdmDto> {
+    try {
+      const collectionRef = this.db.collection(this.collection);
+
+      const snapshot = await collectionRef.where('email', '==', email);
+      if (!snapshot[0].exists) {
+        throw new Error('Administrador não existe.');
+      }
+
+      return await this.findById(snapshot[0].id);
+    } catch (error) {
+      throw new Error('Erro ao buscar: ' + error.message);
     }
   }
 
