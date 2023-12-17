@@ -8,8 +8,6 @@ import {
   Put,
   HttpException,
   HttpStatus,
-  InternalServerErrorException,
-  NotFoundException,
 } from '@nestjs/common';
 import { MedicoService } from './medico.service';
 import { CreateMedicoDto } from './dto/create-medico.dto';

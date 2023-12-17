@@ -1,7 +1,6 @@
 import { ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateMedicoDto } from './dto/create-medico.dto';
 import { UpdateMedicoDto } from './dto/update-medico.dto';
-import * as admin from 'firebase-admin';
 import { MedicoRepository } from './Repository/medico.repository';
 
 @Injectable()
