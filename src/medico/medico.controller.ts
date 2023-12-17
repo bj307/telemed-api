@@ -3,9 +3,13 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
+  Put,
+  HttpException,
+  HttpStatus,
+  InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { MedicoService } from './medico.service';
 import { CreateMedicoDto } from './dto/create-medico.dto';
@@ -13,7 +17,7 @@ import { UpdateMedicoDto } from './dto/update-medico.dto';
 
 @Controller('medico')
 export class MedicoController {
-  constructor(private readonly medicoService: MedicoService) {}
+  constructor(private readonly medicoService: MedicoService) { }
 
   @Post()
   create(@Body() createMedicoDto: CreateMedicoDto) {
@@ -21,22 +25,53 @@ export class MedicoController {
   }
 
   @Get()
-  findAll() {
-    return this.medicoService.findAll();
+  public async findAll() {
+    try {
+      return await this.medicoService.findAll();
+    } catch (error) {
+      throw new HttpException({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        error: 'Erro ao listar medicos',
+        cause: error.message,
+      }, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.medicoService.findOne(+id);
+  public async findById(@Param('id') id: string) {
+    try {
+      return await this.medicoService.findById(id);
+    } catch (error) {
+      throw new HttpException({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        error: `Erro ao buscar o médico com ID ${id}`,
+        cause: error.message,
+      }, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMedicoDto: UpdateMedicoDto) {
-    return this.medicoService.update(+id, updateMedicoDto);
+  @Put(':id')
+  public async update(@Param('id') id: string, @Body() updateMedicoDto: UpdateMedicoDto) {
+    try {
+      return await this.medicoService.remove(id);
+    } catch (error) {
+      throw new HttpException({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        error: `Erro ao atualizar o médico com ID ${id}`,
+        cause: error.message,
+      }, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.medicoService.remove(+id);
+  public async remove(@Param('id') id: string) {
+    try {
+      return await this.medicoService.remove(id);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException(`Erro ao deletar o médico com ID ${id}`);
+    }
   }
 }

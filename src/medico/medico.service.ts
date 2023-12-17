@@ -1,26 +1,69 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateMedicoDto } from './dto/create-medico.dto';
 import { UpdateMedicoDto } from './dto/update-medico.dto';
+import * as admin from 'firebase-admin';
+import { MedicoRepository } from './Repository/medico.repository';
 
 @Injectable()
 export class MedicoService {
-  create(createMedicoDto: CreateMedicoDto) {
-    return 'This action adds a new medico';
+
+  private readonly medicoRepository: MedicoRepository;
+
+  constructor() {
+    this.medicoRepository = new MedicoRepository();
   }
 
-  findAll() {
-    return `This action returns all medico`;
+  async create(createMedicoDto: CreateMedicoDto) {
+    try {
+      const medicoExistente = await this.medicoRepository.buscarPorEmail(createMedicoDto.email);
+      if (medicoExistente) {
+        throw new ConflictException('Email já está em uso');
+      }
+      return await this.medicoRepository.salvar(createMedicoDto);
+    } catch (error) {
+      if (error instanceof ConflictException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Erro ao criar o médico');
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} medico`;
+  async findAll() {
+    return await this.medicoRepository.listar();
   }
 
-  update(id: number, updateMedicoDto: UpdateMedicoDto) {
-    return `This action updates a #${id} medico`;
+  async findById(id: string) {
+    return await this.medicoRepository.buscarID(id);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} medico`;
+  async update(id: string, updateMedicoDto: UpdateMedicoDto) {
+    try {
+      const medico = await this.medicoRepository.buscarID(id);
+      if (!medico) {
+        throw new NotFoundException('Médico não encontrado');
+      }
+      return await this.medicoRepository.atualizar(id, updateMedicoDto);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Erro ao atualizar o médico');
+    }
   }
+
+  async remove(id: string) {
+    try {
+      const medico = await this.medicoRepository.buscarID(id);
+      if (!medico) {
+        throw new NotFoundException('Médico não encontrado');
+      }
+      return await this.medicoRepository.deletar(id);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Erro ao deletar o médico');
+    }
+  }
+
 }
