@@ -20,8 +20,16 @@ export class MedicoController {
   constructor(private readonly medicoService: MedicoService) { }
 
   @Post()
-  create(@Body() createMedicoDto: CreateMedicoDto) {
-    return this.medicoService.create(createMedicoDto);
+  public async create(@Body() createMedicoDto: CreateMedicoDto) {
+    try {
+      return await this.medicoService.create(createMedicoDto);
+    } catch (error) {
+      throw new HttpException({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        error: 'Erro ao criar medico',
+        cause: error.message,
+      }, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @Get()
@@ -68,10 +76,11 @@ export class MedicoController {
     try {
       return await this.medicoService.remove(id);
     } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw new InternalServerErrorException(`Erro ao deletar o médico com ID ${id}`);
+      throw new HttpException({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        error: `Erro ao deletar o médico com ID ${id}`,
+        cause: error.message,
+      }, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }

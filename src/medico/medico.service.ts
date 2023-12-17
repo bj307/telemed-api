@@ -12,7 +12,7 @@ export class MedicoService {
   constructor() {
     this.medicoRepository = new MedicoRepository();
   }
-
+ 
   async create(createMedicoDto: CreateMedicoDto) {
     try {
       const medicoExistente = await this.medicoRepository.buscarPorEmail(createMedicoDto.email);
