@@ -19,9 +19,7 @@ export class SessionController {
         throw new Error('Credenciais inválidas.');
       }
     } catch (error) {
-      throw new Error(
-        'Nenhum usuário encontrado com essa credencial: ' + error.message,
-      );
+      return error.message;
     }
   }
 }

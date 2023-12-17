@@ -93,7 +93,7 @@ export class AdmService {
       const collectionRef = this.db.collection(this.collection);
       const snapshot = await collectionRef.where('email', '==', email).get();
 
-      if (!snapshot.docs[0].exists) {
+      if (snapshot.empty) {
         throw new Error('Administrador não existe.');
       }
 
@@ -103,7 +103,7 @@ export class AdmService {
 
       return valid;
     } catch (error) {
-      throw new Error('Erro ao validar: ' + error.message);
+      throw new Error(error.message);
     }
   }
 
