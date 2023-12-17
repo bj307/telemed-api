@@ -1,4 +1,7 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateAdmDto } from './create-adm.dto';
-
-export class UpdateAdmDto extends PartialType(CreateAdmDto) {}
+export class UpdateAdmDto {
+  nome?: string;
+  email?: string;
+  senha?: string;
+  cpf?: number;
+  telefone?: number;
+}
