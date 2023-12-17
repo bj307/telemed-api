@@ -8,6 +8,20 @@ export class SessionController {
 
   @Post()
   public async login(@Body() login: LoginDTO) {
-    return login;
+    try {
+      if (login.cpf) {
+        return await this.sessionService.loginPaciente(login);
+      } else if (login.crm) {
+        return await this.sessionService.loginMedico(login);
+      } else if (!login.cpf && !login.crm) {
+        return await this.sessionService.loginAdm(login);
+      } else {
+        throw new Error('Credenciais inválidas.');
+      }
+    } catch (error) {
+      throw new Error(
+        'Nenhum usuário encontrado com essa credencial: ' + error.message,
+      );
+    }
   }
 }

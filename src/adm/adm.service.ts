@@ -57,12 +57,12 @@ export class AdmService {
     try {
       const collectionRef = this.db.collection(this.collection);
 
-      const snapshot = await collectionRef.where('email', '==', email);
-      if (!snapshot[0].exists) {
+      const snapshot = await collectionRef.where('email', '==', email).get();
+      if (snapshot.empty) {
         throw new Error('Administrador não existe.');
       }
 
-      return await this.findById(snapshot[0].id);
+      return await this.findById(snapshot.docs[0].id);
     } catch (error) {
       throw new Error('Erro ao buscar: ' + error.message);
     }
