@@ -1,26 +1,94 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateMedicoDto } from './dto/create-medico.dto';
 import { UpdateMedicoDto } from './dto/update-medico.dto';
+import { MedicoRepository } from './Repository/medico.repository';
 
 @Injectable()
 export class MedicoService {
-  create(createMedicoDto: CreateMedicoDto) {
-    return 'This action adds a new medico';
+
+  private readonly medicoRepository: MedicoRepository;
+
+  constructor() {
+    this.medicoRepository = new MedicoRepository();
   }
 
-  findAll() {
-    return `This action returns all medico`;
+  async create(createMedicoDto: CreateMedicoDto) {
+    try {
+
+      const medicoExistenteEmail = await this.medicoRepository.buscarPorEmail(createMedicoDto.email);
+
+      if (medicoExistenteEmail) {
+        throw new ConflictException('Email já está em uso');
+      }
+
+      const medicoExistenteCPF = await this.medicoRepository.buscarPorCPF(createMedicoDto.cpf);
+
+      if (medicoExistenteCPF) {
+        throw new ConflictException('CPF já está em uso');
+      }
+
+      const medicoExistenteCRM = await this.medicoRepository.buscarPorCRM(createMedicoDto.crm);
+
+      if (medicoExistenteCRM) {
+        throw new ConflictException('CRM já está em uso');
+      }
+
+      return await this.medicoRepository.salvar(createMedicoDto);
+    } catch (error) {
+      if (error instanceof ConflictException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Erro ao criar o médico');
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} medico`;
+  async findAll() {
+    try {
+      return this.medicoRepository.listar();
+    } catch (error) {
+      throw error;
+    }
   }
 
-  update(id: number, updateMedicoDto: UpdateMedicoDto) {
-    return `This action updates a #${id} medico`;
+  async findById(id: string) {
+    if (!id) {
+      throw new Error('ID inválido');
+    }
+    try {
+      return this.medicoRepository.buscarID(id);
+    } catch (error) {
+      throw error;
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} medico`;
+  async update(id: string, updateMedicoDto: UpdateMedicoDto) {
+    try {
+      const medico = await this.medicoRepository.buscarID(id);
+      if (!medico) {
+        throw new NotFoundException('Médico não encontrado');
+      }
+      return await this.medicoRepository.atualizar(id, updateMedicoDto);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Erro ao atualizar o médico');
+    }
   }
+
+  async remove(id: string) {
+    try {
+      const medico = await this.medicoRepository.buscarID(id);
+      if (!medico) {
+        throw new NotFoundException('Médico não encontrado');
+      }
+      return await this.medicoRepository.deletar(id);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Erro ao deletar o médico');
+    }
+  }
+
 }
