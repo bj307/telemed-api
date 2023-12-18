@@ -5,9 +5,10 @@ import { AdmModule } from './adm/adm.module';
 import { MedicoModule } from './medico/medico.module';
 import { SessionModule } from './session/session.module';
 import { PacienteModule } from './paciente/paciente.module';
+import { MedicacaoModule } from './medicacao/medicacao.module';
 
 @Module({
-  imports: [AdmModule, MedicoModule, SessionModule, PacienteModule],
+  imports: [AdmModule, MedicoModule, SessionModule, PacienteModule, MedicacaoModule],
   controllers: [AppController],
   providers: [AppService],
 })
