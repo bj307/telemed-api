@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, HttpException, NotFoundException, BadRequestException, HttpStatus } from '@nestjs/common';
 import { MedicacaoService } from './medicacao.service';
 import { CreateMedicacaoDto } from './dto/create-medicacao.dto';
 import { UpdateMedicacaoDto } from './dto/update-medicacao.dto';
@@ -10,26 +10,68 @@ export class MedicacaoController {
 
   @Post()
   public async create(@Body() createMedicacaoDto: CreateMedicacaoDto) {
-    return this.medicacaoService.create(createMedicacaoDto);
+    try {
+      return await this.medicacaoService.create(createMedicacaoDto);
+    }catch (error) {
+      throw new HttpException({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        error: 'Erro ao criar medicação',
+        cause: error.message,
+      }, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
+
 
   @Get()
   public async findAll() {
-    return this.medicacaoService.findAll();
+    try {
+      return await this.medicacaoService.findAll();
+    } catch (error) {
+      throw new HttpException({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        error: 'Erro ao listar as medicações',
+        cause: error.message,
+      }, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
+
 
   @Get(':id')
   public async findById(@Param('id') id: string) {
-    return this.medicacaoService.findById(id);
+    try {
+      return await this.medicacaoService.findById(id);
+    } catch (error) {
+      throw new HttpException({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        error: `Erro ao buscar medicaçãoes com ID ${id}`,
+        cause: error.message,
+      }, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @Put(':id')
   public async update(@Param('id') id: string, @Body() updateMedicacaoDto: UpdateMedicacaoDto) {
-    return this.medicacaoService.update(id, updateMedicacaoDto);
+    try {
+      return await this.medicacaoService.update(id, updateMedicacaoDto);
+    } catch (error) {
+      throw new HttpException({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        error: `Erro ao atualizar a medicação com ID ${id}`,
+        cause: error.message,
+      }, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @Delete(':id')
   public async remove(@Param('id') id: string) {
-    return this.medicacaoService.remove(id);
+    try {
+      return await this.medicacaoService.remove(id);
+    } catch (error) {
+      throw new HttpException({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        error: `Erro ao deletar a medicação ${id}`,
+        cause: error.message,
+      }, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }
