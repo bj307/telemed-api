@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateMedicacaoDto } from './dto/create-medicacao.dto';
 import { UpdateMedicacaoDto } from './dto/update-medicacao.dto';
 import { MedicacaoRepository } from './repository/repository.medicacao';
@@ -12,23 +12,71 @@ export class MedicacaoService {
     this.medicacaoRepository = new MedicacaoRepository();
   }
 
-  create(createMedicacaoDto: CreateMedicacaoDto) {
-    return this.medicacaoRepository.createMedicacao(createMedicacaoDto);
+  async create(createMedicacaoDto: CreateMedicacaoDto) {
+    if (!createMedicacaoDto) {
+      throw new BadRequestException();
+    }
+  
+    try {
+      return await this.medicacaoRepository.createMedicacao(createMedicacaoDto);
+    } catch (error) {
+      throw new Error(`Erro ao criar medicação: ${error.message}`);
+    }
   }
-
-  findAll() {
-    return this.medicacaoRepository.listar();
+  
+  async findAll() {
+    try {
+      return await this.medicacaoRepository.listar();
+    } catch (error) {
+      throw new Error(`Erro ao listar medicação: ${error.message}`);
+    }
   }
-
-  findById(id: string) {
-    return this.medicacaoRepository.buscarID(id);
+  
+  async findById(id: string) {
+    if (!id) {
+      throw new BadRequestException();
+    }
+  
+    try {
+      const medicacao = await this.medicacaoRepository.buscarID(id);
+      if (!medicacao) {
+        throw new NotFoundException(id);
+      }
+      return medicacao;
+    } catch (error) {
+      throw new Error(`Erro ao buscar medicação id: ${error.message}`);
+    }
   }
-
-  update(id: string, updateMedicacaoDto: UpdateMedicacaoDto) {
-    return this.medicacaoRepository.updateMedicacao(id, updateMedicacaoDto);
+  
+  async update(id: string, updateMedicacaoDto: UpdateMedicacaoDto) {
+    if (!id || !updateMedicacaoDto) {
+      throw new BadRequestException();
+    }
+  
+    try {
+      const updatedMedicacao = await this.medicacaoRepository.updateMedicacao(id, updateMedicacaoDto);
+      if (!updatedMedicacao) {
+        throw new NotFoundException(id);
+      }
+      return updatedMedicacao;
+    } catch (error) {
+      throw new Error(`Erro ao atualizar medicacao: ${error.message}`);
+    }
   }
-
-  remove(id: string) {
-    return this.medicacaoRepository.deleteMedicacao(id);
+  
+  async remove(id: string) {
+    if (!id) {
+      throw new BadRequestException();
+    }
+  
+    try {
+      const deletedMedicacao = await this.medicacaoRepository.deleteMedicacao(id);
+      if (!deletedMedicacao) {
+        throw new NotFoundException(id);
+      }
+      return deletedMedicacao;
+    } catch (error) {
+      throw new Error(`Erro ao deletar medicacao: ${error.message}`);
+    }
   }
 }
