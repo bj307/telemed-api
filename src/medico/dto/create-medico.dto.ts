@@ -1,4 +1,5 @@
 import { IsEmail, IsNotEmpty, IsPhoneNumber, Min, MinLength } from "class-validator";
+import { IsCPF } from "class-validator-cpf";
 
 export class CreateMedicoDto {
     
@@ -23,6 +24,7 @@ export class CreateMedicoDto {
     especialidade: string;
 
     @IsNotEmpty()
+    //@IsCPF()
     cpf: string;
 
     @IsNotEmpty()

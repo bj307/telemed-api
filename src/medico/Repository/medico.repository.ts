@@ -65,28 +65,6 @@ export class MedicoRepository {
             throw new InternalServerErrorException('Erro ao buscar o médico');
         }
     }
-    
-    async buscarPorEmail(email: string): Promise<MedicoResponseDto | null> {
-        try {
-            const snapshot = await this.db.collection(this.collection).where('email', '==', email).get();
-            if (snapshot.empty) {
-                return null;
-            }
-    
-            const doc = snapshot.docs[0];
-            const medico = doc.data();
-            return {
-                id: doc.id,
-                nome: medico.nome,
-                especialidade: medico.especialidade,
-                email: medico.email
-            } as MedicoResponseDto;
-        } catch (error) {
-            throw new InternalServerErrorException('Erro ao buscar o médico pelo email');
-        }
-    }
-
-
 
     async atualizar(id: string, updateMedicoDto: UpdateMedicoDto) {
         try {
@@ -123,5 +101,67 @@ export class MedicoRepository {
         }
 
         await docRef.delete();
+    }
+
+    async buscarPorEmail(email: string): Promise<MedicoResponseDto | null> {
+        try {
+            const snapshot = await this.db.collection(this.collection).where('email', '==', email).get();
+            if (snapshot.empty) {
+                return null;
+            }
+    
+            const doc = snapshot.docs[0];
+            const medico = doc.data();
+            return {
+                id: doc.id,
+                nome: medico.nome,
+                especialidade: medico.especialidade,
+                email: medico.email
+            } as MedicoResponseDto;
+        } catch (error) {
+            throw new InternalServerErrorException('Erro ao buscar o médico pelo email');
+        }
+    }
+
+    
+    async buscarPorCPF(cpf: string): Promise<MedicoResponseDto | null> {
+        try {
+            const snapshot = await this.db.collection(this.collection).where('cpf', '==', cpf).get();
+            if (snapshot.empty) {
+                return null;
+            }
+    
+            const doc = snapshot.docs[0];
+            const medico = doc.data();
+            return {
+                id: doc.id,
+                nome: medico.nome,
+                especialidade: medico.especialidade,
+                email: medico.email
+            } as MedicoResponseDto;
+        } catch (error) {
+            throw new InternalServerErrorException('Erro ao buscar o médico pelo cpf');
+        }
+    }
+
+    
+    async buscarPorCRM(crm: string): Promise<MedicoResponseDto | null> {
+        try {
+            const snapshot = await this.db.collection(this.collection).where('crm', '==', crm).get();
+            if (snapshot.empty) {
+                return null;
+            }
+    
+            const doc = snapshot.docs[0];
+            const medico = doc.data();
+            return {
+                id: doc.id,
+                nome: medico.nome,
+                especialidade: medico.especialidade,
+                email: medico.email
+            } as MedicoResponseDto;
+        } catch (error) {
+            throw new InternalServerErrorException('Erro ao buscar o médico pelo crm');
+        }
     }
 }

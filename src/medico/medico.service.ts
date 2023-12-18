@@ -11,13 +11,28 @@ export class MedicoService {
   constructor() {
     this.medicoRepository = new MedicoRepository();
   }
- 
+
   async create(createMedicoDto: CreateMedicoDto) {
     try {
-      const medicoExistente = await this.medicoRepository.buscarPorEmail(createMedicoDto.email);
-      if (medicoExistente) {
+
+      const medicoExistenteEmail = await this.medicoRepository.buscarPorEmail(createMedicoDto.email);
+
+      if (medicoExistenteEmail) {
         throw new ConflictException('Email já está em uso');
       }
+
+      const medicoExistenteCPF = await this.medicoRepository.buscarPorCPF(createMedicoDto.cpf);
+
+      if (medicoExistenteCPF) {
+        throw new ConflictException('CPF já está em uso');
+      }
+
+      const medicoExistenteCRM = await this.medicoRepository.buscarPorCRM(createMedicoDto.crm);
+
+      if (medicoExistenteCRM) {
+        throw new ConflictException('CRM já está em uso');
+      }
+
       return await this.medicoRepository.salvar(createMedicoDto);
     } catch (error) {
       if (error instanceof ConflictException) {
@@ -28,11 +43,22 @@ export class MedicoService {
   }
 
   async findAll() {
-    return await this.medicoRepository.listar();
+    try {
+      return this.medicoRepository.listar();
+    } catch (error) {
+      throw error;
+    }
   }
 
   async findById(id: string) {
-    return await this.medicoRepository.buscarID(id);
+    if (!id) {
+      throw new Error('ID inválido');
+    }
+    try {
+      return this.medicoRepository.buscarID(id);
+    } catch (error) {
+      throw error;
+    }
   }
 
   async update(id: string, updateMedicoDto: UpdateMedicoDto) {
