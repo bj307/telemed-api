@@ -1,9 +1,9 @@
-import { Body, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import {  InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import * as admin from 'firebase-admin';
 import * as bcrypt from 'bcrypt';
 import { CreateMedicoDto } from '../dto/create-medico.dto';
 import { UpdateMedicoDto } from '../dto/update-medico.dto';
-import { MedicoResponseDto } from '../dto/medico.response.DTO';
+import { MedicoResponseDto } from '../dto/medico.response.dto';
 
 export class MedicoRepository {
 

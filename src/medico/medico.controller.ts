@@ -15,6 +15,7 @@ import { UpdateMedicoDto } from './dto/update-medico.dto';
 
 @Controller('medico')
 export class MedicoController {
+  
   constructor(private readonly medicoService: MedicoService) { }
 
   @Post()
