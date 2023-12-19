@@ -67,7 +67,7 @@ export class PacienteService {
     } catch (error) {}
   }
 
-  async findById(id: string): Promise<ShowPacienteDto> {
+  async findById(id: string) {
     try {
       const pacienteRef = this.db.collection(this.collection).doc(id);
       const snapshot = await pacienteRef.get();
