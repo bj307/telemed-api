@@ -10,10 +10,10 @@ export class ConsultaController {
 
   @Post()
   async create(@Body() createConsultaDto: CreateConsultaDto) {
-    
+
     const consulta = await this.consultaService.criarConsulta(createConsultaDto);
     if (!consulta) {
-      throw new NotFoundException('Consulta não pôde ser criada');
+      throw new HttpException('Erro ao criar a consulta', HttpStatus.INTERNAL_SERVER_ERROR);
     }
     return consulta;
   }
@@ -28,7 +28,7 @@ export class ConsultaController {
     const consulta = await this.consultaService.buscarConsultaPorId(id);
     console.log(consulta);
     if (!consulta) {
-      throw new NotFoundException('Consulta não encontrada');
+      throw new HttpException('Erro ao buscar a consulta', HttpStatus.INTERNAL_SERVER_ERROR);
     }
     return consulta;
   }
@@ -37,17 +37,22 @@ export class ConsultaController {
   async update(@Param('id') id: string, @Body() updateConsultaDto: UpdateConsultaDto) {
     const consulta = await this.consultaService.atualizarConsulta(id, updateConsultaDto);
     if (!consulta) {
-      throw new NotFoundException('Consulta não encontrada');
+      throw new HttpException('Erro ao atualizar a consulta', HttpStatus.INTERNAL_SERVER_ERROR);
     }
     return consulta;
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    const consulta = await this.consultaService.removerConsulta(id);
 
-    if (consulta === undefined) {
-      throw new NotFoundException('Consulta não encontrada');
+    try {
+      const consulta = await this.consultaService.removerConsulta(id);
+    } catch (error) {
+        if (error instanceof NotFoundException) {
+          throw new NotFoundException(error.message);
+        }
+      throw new HttpException('Erro ao deletar a consulta', HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
   }
 }

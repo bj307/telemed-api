@@ -1,4 +1,5 @@
-import { IsDate, IsNotEmpty, isNotEmpty } from "class-validator";
+import { IsDate, IsEnum, IsNotEmpty, isNotEmpty } from "class-validator";
+import { Status } from "../enum/status-consulta.enum";
 
 export class CreateConsultaDto {
 
@@ -13,7 +14,7 @@ export class CreateConsultaDto {
     @IsNotEmpty()
     paciente: string;
 
-    medicacao?: string | "sem medicação";
+    medicacao?: string;
 
     @IsNotEmpty()
     dataDaConsulta: Date;
@@ -22,7 +23,8 @@ export class CreateConsultaDto {
     horarioConsulta: string;
 
     @IsNotEmpty()
-    status: string;
+    @IsEnum(Status)
+    status: Status;
 
     @IsNotEmpty()
     duracaoConsulta: string;

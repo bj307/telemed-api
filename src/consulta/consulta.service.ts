@@ -1,6 +1,4 @@
-import { IsNotEmpty } from 'class-validator';
-import { isNotEmpty } from 'class-validator';
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, ConflictException } from '@nestjs/common';
 import { ConsultaRepository } from './repository/consulta.repository';
 import { CreateConsultaDto } from './dto/create-consulta.dto';
 import { UpdateConsultaDto } from './dto/update-consulta.dto';
@@ -31,7 +29,6 @@ export class ConsultaService {
 
     if (!paciente) {
       throw new NotFoundException(`Paciente com ID ${createConsultaDto.paciente} não encontrado`);
-
     }
 
     const medicacao = await this.medicacaoService.findById(createConsultaDto.medicacao);
@@ -39,61 +36,74 @@ export class ConsultaService {
     if (!medicacao) {
       throw new NotFoundException(`Medicação com ID ${createConsultaDto.medicacao} não encontrada`);
     }
-    return await this.consultaRepository.createConsulta(createConsultaDto);
+
+    try {
+      return await this.consultaRepository.createConsulta(createConsultaDto);
+    } catch (error) {
+      if (error instanceof ConflictException) {
+        throw new ConflictException(error.message);
+      }
+      throw new BadRequestException(error.message);
+    }
   }
 
   async listarConsultas() {
-    return await this.consultaRepository.listar();
+    try {
+      return await this.consultaRepository.listar();
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 
   async buscarConsultaPorId(id: string) {
+      const consulta = await this.consultaRepository.buscarID(id);
 
-    const consulta = await this.consultaRepository.buscarID(id);
-    
-    console.log(consulta);
+      console.log(consulta);
 
-    if (!consulta) {
-      throw new NotFoundException(`Consulta com  ${id} não encontrada`);
-    }
+      if (!consulta) {
+        throw new NotFoundException(`Consulta com  ${id} não encontrada`);
+      }
 
-    const medico = await this.medicoService.findById(consulta.medico);
-    const paciente = await this.pacienteService.findById(consulta.paciente);
-    const medicacao = await this.medicacaoService.findById(consulta.medicacao);
+      const medico = await this.medicoService.findById(consulta.medico);
+      const paciente = await this.pacienteService.findById(consulta.paciente);
+      const medicacao = await this.medicacaoService.findById(consulta.medicacao);
 
+      const responseConsulta: ResponseConsulta = {
+        id: consulta.id,
+        medico: medico,
+        paciente: paciente,
+        medicacao: medicacao,
+        status: consulta.status,
+        duracao: consulta.duracaoConsulta,
+        horario: consulta.horarioConsulta,
+        data: consulta.dataDaConsulta
 
-    const responseConsulta: ResponseConsulta = {
-      id: consulta.id,
-      medico: medico,
-      paciente: paciente,
-      medicacao: medicacao,
-      status: consulta.status,
-      duracao: consulta.duracaoConsulta,
-      horario: consulta.horarioConsulta,
-      data: consulta.dataDaConsulta
-    }
-    console.log(responseConsulta);
-
-    return responseConsulta;
-
+      }
+      return responseConsulta;
   }
 
   async atualizarConsulta(id: string, updateConsultaDto: UpdateConsultaDto) {
-
-    const consultaAtualizada = await this.consultaRepository.updateConsulta(id, updateConsultaDto);
-    if (!consultaAtualizada) {
-      throw new NotFoundException(`Consulta com ID ${id} não encontrada`);
+    try {
+      const consultaAtualizada = await this.consultaRepository.updateConsulta(id, updateConsultaDto);
+      if (!consultaAtualizada) {
+        throw new NotFoundException(`Consulta com ID ${id} não encontrada`);
+      }
+      return consultaAtualizada;
+      
+    } catch (error) {
+      throw new BadRequestException(error.message);
     }
-    return consultaAtualizada;
   }
 
   async removerConsulta(id: string) {
-    if (!id) {
-      throw new BadRequestException("ID da consulta não informado");
-    }
 
     if (!await this.consultaRepository.buscarID(id)) {
       throw new NotFoundException(`Consulta com ID ${id} não encontrada`);
     }
-    this.consultaRepository.deleteConsulta(id);
+    try {
+      this.consultaRepository.deleteConsulta(id);
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 }
