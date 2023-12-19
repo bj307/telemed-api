@@ -3,7 +3,7 @@ import * as admin from 'firebase-admin';
 import * as bcrypt from 'bcrypt';
 import { CreateMedicoDto } from '../dto/create-medico.dto';
 import { UpdateMedicoDto } from '../dto/update-medico.dto';
-import { MedicoResponseDto } from '../dto/medico.response.dto';
+import { MedicoResponseDto } from '../dto/response-medico.dto';
 
 export class MedicoRepository {
 
