@@ -7,9 +7,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   dotenv.config();
-  
-  const CSS_URL = " https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css ";
-   
+     
   const fireConnect = process.env.FIRE_CONNECT;
 
   if (!fireConnect) {
@@ -31,14 +29,28 @@ async function bootstrap() {
     .setTitle('TELEMEDICINA')
     .setDescription('API TELEMEDICINA')
     .setVersion('1.0')
+    .setBasePath('api/v1')
     .addTag('telemed')
     .build();
 
   const app = await NestFactory.create(AppModule, { cors: true });
   
   const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('swagger', app, document, {
+    customSiteTitle: 'Backend Generator',
+    customfavIcon: 'https://avatars.githubusercontent.com/u/6936373?s=200&v=4',
+    customJs: [
+      'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-bundle.min.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-standalone-preset.min.js',
+    ],
+    customCssUrl: [
+      'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.min.css',
+      'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-standalone-preset.min.css',
+      'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.css',
+    ],
+  });
   
-  SwaggerModule.setup('api', app, document, { customCssUrl: "/public/swagger.css" && CSS_URL });
+  SwaggerModule.setup('api', app, document);
 
   app.useGlobalPipes(new ValidationPipe());
 
