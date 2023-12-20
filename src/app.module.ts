@@ -7,10 +7,12 @@ import { SessionModule } from './session/session.module';
 import { PacienteModule } from './paciente/paciente.module';
 import { MedicacaoModule } from './medicacao/medicacao.module';
 import { ConsultaModule } from './consulta/consulta.module';
+import { ChatGateway } from './chat/chat.gateway';
 
 @Module({
-  imports: [AdmModule, MedicoModule, SessionModule, PacienteModule, MedicacaoModule, ConsultaModule],
+  imports: [AdmModule, MedicoModule, SessionModule, PacienteModule, MedicacaoModule, ConsultaModule,ChatGateway,
+  ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ChatGateway],
 })
-export class AppModule {}
+export class AppModule { }
