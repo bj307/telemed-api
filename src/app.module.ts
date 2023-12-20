@@ -11,7 +11,7 @@ import { ChatGateway } from './chat/chat.gateway';
 
 @Module({
   imports: [AdmModule, MedicoModule, SessionModule, PacienteModule, MedicacaoModule, ConsultaModule,ChatGateway,
-    
+      
   ],
   controllers: [AppController],
   providers: [AppService, ChatGateway],
