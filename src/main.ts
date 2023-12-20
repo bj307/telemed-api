@@ -7,7 +7,9 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   dotenv.config();
-
+  
+  const CSS_URL = " https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css ";
+   
   const fireConnect = process.env.FIRE_CONNECT;
 
   if (!fireConnect) {
@@ -36,13 +38,11 @@ async function bootstrap() {
   
   const document = SwaggerModule.createDocument(app, config);
   
-  SwaggerModule.setup('api', app, document);
-
-
+  SwaggerModule.setup('api', app, document, { customCssUrl: "/public/swagger.css" && CSS_URL });
 
   app.useGlobalPipes(new ValidationPipe());
 
-  const port = process.env.PORT || 3000;
+  const port = process.env.PORT || 3000; 
 
   await app.listen(port);
 }
