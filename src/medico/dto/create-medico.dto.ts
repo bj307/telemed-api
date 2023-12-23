@@ -1,38 +1,43 @@
-import { IsEmail, IsNotEmpty, IsPhoneNumber, Min, MinLength } from "class-validator";
-import { IsCPF } from "class-validator-cpf";
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsPhoneNumber,
+  Min,
+  MinLength,
+} from 'class-validator';
+import { IsCPF } from 'class-validator-cpf';
 
 export class CreateMedicoDto {
-    
-    @IsNotEmpty()
-    nome: string;
-    
-    @IsEmail()
-    email: string;
+  @IsNotEmpty()
+  nome: string;
 
-    @IsNotEmpty({
-        message: 'Informe uma senha',
-      })
-    @MinLength(6, {
-        message: 'A senha deve ter pelo menos 6 caracteres',
-      })
-    senha: string;
+  @IsEmail()
+  email: string;
 
-    @IsNotEmpty()
-    crm: string;
+  @IsNotEmpty({
+    message: 'Informe uma senha',
+  })
+  @MinLength(6, {
+    message: 'A senha deve ter pelo menos 6 caracteres',
+  })
+  senha: string;
 
-    @IsNotEmpty()
-    especialidade: string;
+  @IsNotEmpty()
+  crm: string;
 
-    @IsNotEmpty()
-    //@IsCPF()
-    cpf: string;
+  @IsNotEmpty()
+  especialidade: string;
 
-    @IsNotEmpty()
-    rg: string;
+  @IsNotEmpty()
+  //@IsCPF()
+  cpf: string;
 
-    @IsNotEmpty()
-    endereco: string;
+  @IsNotEmpty()
+  rg: string;
 
-    @IsPhoneNumber('BR')
-    telefone: string;
+  @IsNotEmpty()
+  endereco: string;
+
+  @IsPhoneNumber('BR')
+  telefone: string;
 }
