@@ -25,7 +25,7 @@ export class MedicoController {
     } catch (error) {
       throw new HttpException(
         {
-          status: HttpStatus.INTERNAL_SERVER_ERROR,
+          status: error.status,
           error: 'Erro ao criar medico',
           cause: error.message,
         },
@@ -41,7 +41,7 @@ export class MedicoController {
     } catch (error) {
       throw new HttpException(
         {
-          status: HttpStatus.INTERNAL_SERVER_ERROR,
+          status: error.status,
           error: 'Erro ao listar medicos',
           cause: error.message,
         },
@@ -73,11 +73,11 @@ export class MedicoController {
     } catch (error) {
       throw new HttpException(
         {
-          status: HttpStatus.INTERNAL_SERVER_ERROR,
+          status: error.status,
           error: `Erro ao buscar o médico com ID ${id}`,
           cause: error.message,
         },
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.NOT_FOUND,
       );
     }
   }

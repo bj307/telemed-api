@@ -33,16 +33,22 @@ export class MedicoRepository {
 
   async listar() {
     try {
-      const snapshot = await this.db.collection(this.collection).get();
-      return snapshot.docs.map((doc) => {
-        const medico = doc.data();
-        return {
-          id: doc.id,
-          nome: medico.nome,
-          especialidade: medico.especialidade,
-          email: medico.email,
-        } as MedicoResponseDto;
+      const collectionRef = this.db.collection(this.collection);
+      const snapshot = await collectionRef.get();
+
+      if (snapshot.empty) {
+        throw new Error('Nenhum Médico encontrado.');
+      }
+
+      const medicosPromises: Promise<MedicoResponseDto>[] = [];
+
+      snapshot.forEach(async (doc) => {
+        const medicoPromise = this.buscarID(doc.id);
+        medicosPromises.push(medicoPromise);
       });
+
+      const medicos = await Promise.all(medicosPromises);
+      return medicos;
     } catch (error) {
       throw new InternalServerErrorException('Erro ao listar os médicos');
     }
@@ -60,7 +66,12 @@ export class MedicoRepository {
         nome: medico.nome,
         especialidade: medico.especialidade,
         email: medico.email,
+        cpf: medico.cpf,
+        crm: medico.crm,
+        telefone: medico.telefone,
+        endereco: medico.endereco,
       } as MedicoResponseDto;
+
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;
@@ -82,15 +93,12 @@ export class MedicoRepository {
         updateMedicoDto.senha = await bcrypt.hash(updateMedicoDto.senha, 10);
       }
 
-      await docRef.update({
-        ...updateMedicoDto,
-      });
+      const updateData = { ...updateMedicoDto };
+
+      await docRef.update(updateData);
 
       return this.buscarID(id);
     } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
       throw new InternalServerErrorException('Erro ao atualizar o médico');
     }
   }
@@ -117,13 +125,8 @@ export class MedicoRepository {
       }
 
       const doc = snapshot.docs[0];
-      const medico = doc.data();
-      return {
-        id: doc.id,
-        nome: medico.nome,
-        especialidade: medico.especialidade,
-        email: medico.email,
-      } as MedicoResponseDto;
+      return this.buscarID(doc.id);
+
     } catch (error) {
       throw new InternalServerErrorException(
         'Erro ao buscar o médico pelo email',
@@ -142,13 +145,7 @@ export class MedicoRepository {
       }
 
       const doc = snapshot.docs[0];
-      const medico = doc.data();
-      return {
-        id: doc.id,
-        nome: medico.nome,
-        especialidade: medico.especialidade,
-        email: medico.email,
-      } as MedicoResponseDto;
+      return this.buscarID(doc.id);
     } catch (error) {
       throw new InternalServerErrorException(
         'Erro ao buscar o médico pelo cpf',
@@ -167,13 +164,7 @@ export class MedicoRepository {
       }
 
       const doc = snapshot.docs[0];
-      const medico = doc.data();
-      return {
-        id: doc.id,
-        nome: medico.nome,
-        especialidade: medico.especialidade,
-        email: medico.email,
-      } as MedicoResponseDto;
+      return this.buscarID(doc.id);
     } catch (error) {
       throw new InternalServerErrorException(
         'Erro ao buscar o médico pelo crm',
