@@ -1,19 +1,18 @@
-import {
-  IsEmail,
-  IsNotEmpty,
-  IsPhoneNumber,
-  Min,
-  MinLength,
-} from 'class-validator';
-import { IsCPF } from 'class-validator-cpf';
+import { ApiProperty } from "@nestjs/swagger";
+import { IsEmail, IsNotEmpty, IsPhoneNumber, Min, MinLength } from "class-validator";
+import { IsCPF } from "class-validator-cpf";
 
 export class CreateMedicoDto {
+
+  @ApiProperty()
   @IsNotEmpty()
   nome: string;
 
+  @ApiProperty()
   @IsEmail()
   email: string;
 
+  @ApiProperty()
   @IsNotEmpty({
     message: 'Informe uma senha',
   })
@@ -22,22 +21,28 @@ export class CreateMedicoDto {
   })
   senha: string;
 
+  @ApiProperty()
   @IsNotEmpty()
   crm: string;
 
+  @ApiProperty()
   @IsNotEmpty()
   especialidade: string;
 
+  @ApiProperty()
   @IsNotEmpty()
   //@IsCPF()
   cpf: string;
 
+  @ApiProperty()
   @IsNotEmpty()
   rg: string;
 
+  @ApiProperty()
   @IsNotEmpty()
   endereco: string;
 
+  @ApiProperty()
   @IsPhoneNumber('BR')
   telefone: string;
 }
