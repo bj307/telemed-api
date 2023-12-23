@@ -1,4 +1,4 @@
-import {  InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import * as admin from 'firebase-admin';
 import * as bcrypt from 'bcrypt';
 import { CreateMedicoDto } from '../dto/create-medico.dto';
@@ -30,18 +30,24 @@ export class MedicoRepository {
 
     async listar() {
         try {
-            const snapshot = await this.db.collection(this.collection).get();
-            return snapshot.docs.map(doc => {
-                const medico = doc.data();
-                return {
-                    id: doc.id,
-                    nome: medico.nome,
-                    especialidade: medico.especialidade,
-                    email: medico.email
-                } as MedicoResponseDto;
+            const collectionRef = this.db.collection(this.collection);
+            const snapshot = await collectionRef.get();
+    
+            if (snapshot.empty) {
+                throw new Error('Nenhum Médico encontrado.');
+            }
+    
+            const medicosPromises: Promise<MedicoResponseDto>[] = [];
+    
+            snapshot.forEach(async (doc) => {
+                const medicoPromise = this.buscarID(doc.id);
+                medicosPromises.push(medicoPromise);
             });
+    
+            const medicos = await Promise.all(medicosPromises);
+    
+            return medicos;
         } catch (error) {
-            throw new InternalServerErrorException('Erro ao listar os médicos');
         }
     }
 
@@ -56,7 +62,11 @@ export class MedicoRepository {
                 id: snapshot.id,
                 nome: medico.nome,
                 especialidade: medico.especialidade,
-                email: medico.email
+                email: medico.email,
+                cpf: medico.cpf,
+                crm: medico.crm,
+                telefone: medico.telefone,
+                endereco: medico.endereco,
             } as MedicoResponseDto;
         } catch (error) {
             if (error instanceof NotFoundException) {
@@ -109,57 +119,37 @@ export class MedicoRepository {
             if (snapshot.empty) {
                 return null;
             }
-    
+
             const doc = snapshot.docs[0];
-            const medico = doc.data();
-            return {
-                id: doc.id,
-                nome: medico.nome,
-                especialidade: medico.especialidade,
-                email: medico.email
-            } as MedicoResponseDto;
+            return this.buscarID(doc.id);
         } catch (error) {
             throw new InternalServerErrorException('Erro ao buscar o médico pelo email');
         }
     }
 
-    
+
     async buscarPorCPF(cpf: string): Promise<MedicoResponseDto | null> {
         try {
             const snapshot = await this.db.collection(this.collection).where('cpf', '==', cpf).get();
             if (snapshot.empty) {
                 return null;
             }
-    
             const doc = snapshot.docs[0];
-            const medico = doc.data();
-            return {
-                id: doc.id,
-                nome: medico.nome,
-                especialidade: medico.especialidade,
-                email: medico.email
-            } as MedicoResponseDto;
+            return this.buscarID(doc.id);
         } catch (error) {
             throw new InternalServerErrorException('Erro ao buscar o médico pelo cpf');
         }
     }
 
-    
+
     async buscarPorCRM(crm: string): Promise<MedicoResponseDto | null> {
         try {
             const snapshot = await this.db.collection(this.collection).where('crm', '==', crm).get();
             if (snapshot.empty) {
                 return null;
             }
-    
             const doc = snapshot.docs[0];
-            const medico = doc.data();
-            return {
-                id: doc.id,
-                nome: medico.nome,
-                especialidade: medico.especialidade,
-                email: medico.email
-            } as MedicoResponseDto;
+            return this.buscarID(doc.id);
         } catch (error) {
             throw new InternalServerErrorException('Erro ao buscar o médico pelo crm');
         }

@@ -41,6 +41,7 @@ async function bootstrap() {
     swaggerOptions: {
       filter: true,
       showRequestDuration: true,
+       
     },
   });
 
