@@ -158,6 +158,27 @@ export class PacienteService {
     }
   }
 
+  async checkCPF(cpf: number, email: string): Promise<boolean> {
+    try {
+      const collectionRef = this.db.collection(this.collection);
+      const snapshot = await collectionRef.where('email', '==', email).get();
+
+      if (!snapshot.docs[0].exists) {
+        throw new Error('Paciente não existe.');
+      }
+
+      const paciente = snapshot.docs[0].data();
+
+      if (paciente.cpf == cpf) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      throw new Error('Erro ao validar: ' + error.message);
+    }
+  }
+
   async checkPassword(senha: string, email: string): Promise<boolean> {
     try {
       const collectionRef = this.db.collection(this.collection);
