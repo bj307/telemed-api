@@ -67,6 +67,7 @@ export class MedicoService {
       if (!medico) {
         throw new NotFoundException('Médico não encontrado');
       }
+      
       return await this.medicoRepository.atualizar(id, updateMedicoDto);
     } catch (error) {
       if (error instanceof NotFoundException) {
