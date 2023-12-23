@@ -2,12 +2,14 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { LoginDTO } from './dto/login.dto';
 import { AdmService } from 'src/adm/adm.service';
 import { PacienteService } from 'src/paciente/paciente.service';
+import { MedicoService } from 'src/medico/medico.service';
 
 @Injectable()
 export class SessionService {
   constructor(
     private readonly admService: AdmService,
     private readonly pacienteService: PacienteService,
+    private readonly medicoService: MedicoService,
   ) {}
 
   async loginAdm(login: LoginDTO) {
@@ -30,11 +32,44 @@ export class SessionService {
   }
 
   async loginMedico(login: LoginDTO) {
-    return login;
+    try {
+      const crmValid = await this.medicoService.checkCRM(
+        login.crm,
+        login.email,
+      );
+
+      if (!crmValid) {
+        throw new NotFoundException('Email e CRM incompatíveis.');
+      }
+
+      const valid = await this.medicoService.checkPassword(
+        login.senha,
+        login.email,
+      );
+
+      if (!valid) {
+        throw new NotFoundException('Credenciais inválidas.');
+      }
+
+      const medico = await this.medicoService.findByEmail(login.email);
+
+      return medico;
+    } catch (error) {
+      throw new Error('Erro ao fazer login: ' + error.message);
+    }
   }
 
   async loginPaciente(login: LoginDTO) {
     try {
+      const cpfValid = await this.pacienteService.checkCPF(
+        login.cpf,
+        login.email,
+      );
+
+      if (!cpfValid) {
+        throw new NotFoundException('Email e CPF incompatíveis.');
+      }
+
       const valid = await this.pacienteService.checkPassword(
         login.senha,
         login.email,
@@ -44,9 +79,9 @@ export class SessionService {
         throw new NotFoundException('Credenciais inválidas.');
       }
 
-      const adm = await this.pacienteService.findByEmail(login.email);
+      const paciente = await this.pacienteService.findByEmail(login.email);
 
-      return adm;
+      return paciente;
     } catch (error) {
       throw new Error('Erro ao fazer login: ' + error.message);
     }
