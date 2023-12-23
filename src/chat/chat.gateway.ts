@@ -1,14 +1,20 @@
-import { Socket } from 'socket.io';
-import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway } from "@nestjs/websockets";
+import { Server, Socket } from 'socket.io';
+import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { ChatService } from "./chat.service";
-import { Server } from "http";
-import { NestGateway } from "@nestjs/websockets/interfaces/nest-gateway.interface";
 import { Chat } from './dto/chat.dto';
+import { OnModuleInit } from '@nestjs/common';
 
 @WebSocketGateway()
-export class ChatGateway implements NestGateway {
+export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, OnModuleInit {
+    
+    @WebSocketServer()
     server: Server;
+
     constructor(private chatService: ChatService) { }
+
+    onModuleInit() {
+        console.log('ChatGateway iniciado');
+    }
 
     afterInit(server: Server) {
         console.log('ChatGateway inicializado');
@@ -17,9 +23,6 @@ export class ChatGateway implements NestGateway {
 
     handleConnection(client: Socket) {
         console.log('Cliente conectado');
-        process.nextTick(async () => {
-            client.emit('message', await this.chatService.getChats());
-        })
     }
 
     handleDisconnect(client: Socket) {
@@ -29,8 +32,6 @@ export class ChatGateway implements NestGateway {
     @SubscribeMessage('chat')
     async handleNewMessage(@MessageBody() chat: Chat, @ConnectedSocket() sender: Socket) {
         console.log('novo chat', chat);
-        this.chatService.salvarChat(chat);
         sender.emit('novo chat', chat);
-        this.server.emit('novo chat', chat);
     }
 }
