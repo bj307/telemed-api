@@ -1,30 +1,36 @@
-import { Logger } from '@nestjs/common';
-import { SubscribeMessage, MessageBody, ConnectedSocket, OnGatewayConnection, OnGatewayDisconnect, WebSocketServer, WebSocketGateway } from '@nestjs/websockets';
-import { Server } from 'http';
 import { Socket } from 'socket.io';
+import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway } from "@nestjs/websockets";
+import { ChatService } from "./chat.service";
+import { Server } from "http";
+import { NestGateway } from "@nestjs/websockets/interfaces/nest-gateway.interface";
+import { Chat } from './dto/chat.dto';
 
 @WebSocketGateway()
-export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
-  
-  @WebSocketServer()
-  server: Server;
+export class ChatGateway implements NestGateway {
+    server: Server;
+    constructor(private chatService: ChatService) { }
 
-  private logger: Logger = new Logger('ChatGateway');
+    afterInit(server: Server) {
+        console.log('ChatGateway inicializado');
+        this.server = server;
+    }
 
-  afterInit(server: Server) {
-    this.logger.log('Init');
-  }
+    handleConnection(client: Socket) {
+        console.log('Cliente conectado');
+        process.nextTick(async () => {
+            client.emit('message', await this.chatService.getChats());
+        })
+    }
 
-  handleConnection(client: Socket) {
-    this.logger.log(`Client connected: ${client.id}`);  
-  }
+    handleDisconnect(client: Socket) {
+        console.log('Cliente desconectado');
+    }
 
-  handleDisconnect(client: Socket) {
-    this.logger.log(`Client disconnected: ${client.id}`);
-  }
-
-  @SubscribeMessage('message')
-  handleMessage(client: Socket, payload: string): void  {
-    this.server.emit('message', payload, client.id); 
-  }
+    @SubscribeMessage('chat')
+    async handleNewMessage(@MessageBody() chat: Chat, @ConnectedSocket() sender: Socket) {
+        console.log('novo chat', chat);
+        this.chatService.salvarChat(chat);
+        sender.emit('novo chat', chat);
+        this.server.emit('novo chat', chat);
+    }
 }

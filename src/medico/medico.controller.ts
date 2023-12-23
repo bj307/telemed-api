@@ -60,7 +60,7 @@ export class MedicoController {
   @Put(':id')
   public async update(@Param('id') id: string, @Body() updateMedicoDto: UpdateMedicoDto) {
     try {
-      return await this.medicoService.remove(id);
+      return await this.medicoService.update(id, updateMedicoDto);
     } catch (error) {
       throw new HttpException({
         status: HttpStatus.INTERNAL_SERVER_ERROR,
