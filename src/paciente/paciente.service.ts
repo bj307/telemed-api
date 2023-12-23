@@ -43,7 +43,7 @@ export class PacienteService {
 
       return await this.findById(novoPaciente.id);
     } catch (error) {
-      throw new Error('Erro ao criar: ' + error.message);
+      throw new Error(error.message);
     }
   }
 

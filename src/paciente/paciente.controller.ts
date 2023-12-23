@@ -21,14 +21,11 @@ export class PacienteController {
   public async create(
     @Body() createPacienteDto: CreatePacienteDto,
   ): Promise<ShowPacienteDto> {
-    const paciente: ShowPacienteDto =
-      await this.pacienteService.create(createPacienteDto);
-
-    if (!paciente) {
-      return;
+    try {
+      return await this.pacienteService.create(createPacienteDto);
+    } catch (error) {
+      return error.message;
     }
-
-    return paciente;
   }
 
   @Get()
