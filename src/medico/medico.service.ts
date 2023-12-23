@@ -67,7 +67,26 @@ export class MedicoService {
       if (!medico) {
         throw new NotFoundException('Médico não encontrado');
       }
-      
+
+      const medicoExistenteEmail = await this.medicoRepository.buscarPorEmail(updateMedicoDto.email);
+
+      if (medicoExistenteEmail) {
+        throw new ConflictException('Email já está em uso');
+      }
+
+      const medicoExistenteCPF = await this.medicoRepository.buscarPorCPF(updateMedicoDto.cpf);
+
+      if (medicoExistenteCPF) {
+        throw new ConflictException('CPF já está em uso');
+      }
+
+      const medicoExistenteCRM = await this.medicoRepository.buscarPorCRM(updateMedicoDto.crm);
+
+      if (medicoExistenteCRM) {
+        throw new ConflictException('CRM já está em uso');
+      }
+
+
       return await this.medicoRepository.atualizar(id, updateMedicoDto);
     } catch (error) {
       if (error instanceof NotFoundException) {
