@@ -12,11 +12,13 @@ import { PacienteService } from './paciente.service';
 import { CreatePacienteDto } from './dto/create-paciente.dto';
 import { UpdatePacienteDto } from './dto/update-paciente.dto';
 import { ShowPacienteDto } from './dto/show-paciente.dto';
+import { Public } from 'src/auth/decorator/is-public.decorator';
 
 @Controller('paciente')
 export class PacienteController {
   constructor(private readonly pacienteService: PacienteService) {}
 
+  @Public()
   @Post('cadastro')
   public async create(
     @Body() createPacienteDto: CreatePacienteDto,
