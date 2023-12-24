@@ -118,7 +118,7 @@ export class PacienteService {
     }
   }
 
-  async findByEmail(email: string): Promise<ShowPacienteDto> {
+  async findByEmail(email: string): Promise<any> {
     try {
       const collectionRef = this.db.collection(this.collection);
       const snapshot = await collectionRef.where('email', '==', email).get();
@@ -126,7 +126,9 @@ export class PacienteService {
         return;
       }
 
-      return await this.findById(snapshot.docs[0].id);
+      const paciente = snapshot.docs[0].data();
+
+      return paciente; 
     } catch (error) {
       throw new Error('Erro ao buscar: ' + error.message);
     }
