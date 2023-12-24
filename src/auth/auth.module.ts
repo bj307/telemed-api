@@ -7,7 +7,6 @@ import { MedicoModule } from 'src/medico/medico.module';
 import * as dotenv from 'dotenv';
 import { AuthGuard } from './guards/auth.guard';
 import { APP_GUARD } from '@nestjs/core';
-import { JwtStrategy } from './strategy/jwt.strategy';
 import { LocalStrategy } from './strategy/local.strategy';
 
 dotenv.config();
@@ -26,7 +25,7 @@ dotenv.config();
     AuthService, 
     PacienteService, 
     AuthGuard, 
-    JwtStrategy, 
+    LocalStrategy, 
     LocalStrategy,
     {
       provide: APP_GUARD,
