@@ -82,5 +82,10 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "pkg": {
+    "assets": [
+      "node_modules/@nestjs/websockets/**/*"
+    ]
   }
 }

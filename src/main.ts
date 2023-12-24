@@ -29,21 +29,13 @@ async function bootstrap() {
   .setTitle('TELEMEDICINA')
   .setDescription('API TELEMEDICINA')
   .setVersion('1.0')
-  .addServer('api/v1')
   .addTag('telemed')
   .build();
 
   const app = await NestFactory.create(AppModule, { cors: true });
   
   const document = SwaggerModule.createDocument(app, config);
-  
-  SwaggerModule.setup('/api', app, document,{
-    swaggerOptions: {
-      filter: true,
-      showRequestDuration: true,
-       
-    },
-  });
+  SwaggerModule.setup('swagger', app, document);
 
   app.useGlobalPipes(new ValidationPipe());
 
