@@ -88,7 +88,6 @@ export class PacienteService {
         cpf: data.cpf,
         rg: data.rg,
         telefone: data.telefone,
-        role: data.role,
       };
 
       return showPaciente;

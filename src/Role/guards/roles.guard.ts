@@ -18,6 +18,9 @@ export class RolesGuard implements CanActivate {
 
 
   async matchRoles(requiredRoles: string[], userRoles: string[]): Promise<boolean> {
-     return await requiredRoles.some(role => userRoles.includes(role));
+    if (userRoles.includes('admin')) {
+      return true;
+    }
+    return requiredRoles.some(role => userRoles.includes(role));
   }
 }

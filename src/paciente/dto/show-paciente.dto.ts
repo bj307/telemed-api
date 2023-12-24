@@ -6,5 +6,4 @@ export class ShowPacienteDto {
   cpf: number;
   rg: number;
   telefone: number;
-  role: Role;
 }
