@@ -4,6 +4,7 @@ import { ChatService } from "./chat.service";
 import { Chat } from './dto/chat.dto';
 import { OnModuleInit } from '@nestjs/common';
 import { Sala } from './dto/sala.interface';
+import { SessionService } from 'src/session/session.service';
 
 @WebSocketGateway()
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, OnModuleInit {
@@ -11,7 +12,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
     @WebSocketServer()
     server: Server;
 
-    constructor(private chatService: ChatService) { }
+    constructor(private chatService: ChatService, 
+                private session :SessionService) { }
 
     onModuleInit() {
         console.log('ChatGateway iniciado');
@@ -21,13 +23,24 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
         console.log('ChatGateway inicializado');
     }
 
-    handleConnection(client: Socket) {
-        console.log('Cliente conectado');
+
+    //passa primeiro aqui quando disparo o send
+    async handleConnection(socket: Socket) {
+        try {
+            let usuario = socket.handshake.headers.usuarios;
+            if(!socket.handshake.headers.usuarios){
+                this.disconectar(socket);
+            }else {
+                const salas = await this.chatService.getSalas();
+                return this.server.to(socket.id).emit('salas', salas);
+            }
+        }catch (error) {
+            return this.disconectar(socket);
+        }
     }
 
-    handleDisconnect(client: Socket) {
-        console.log('Cliente desconectado', client.handshake.query.id);
-        client.disconnect();
+    handleDisconnect(socket: Socket) {
+        this.disconectar(socket);
     }
 
     @SubscribeMessage('chat')
@@ -37,14 +50,22 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
         sender.emit('novo chat', chat);
     }
 
+    
+
     @SubscribeMessage('criarSala')
     async onCriarSala(socket: Socket, sala: Sala) {
-        console.log('criar sala', socket);
         let usuarios = socket.handshake.headers.usuarios;
-        console.log('usuarios', usuarios);
         if (typeof usuarios === 'string') {
             usuarios = usuarios.split(',');
         }
-        this.chatService.criarSala(sala, usuarios);
+        let usuariosString = usuarios.join(',');
+        console.log(sala.id, usuariosString )
+        console.log(socket)
+        this.chatService.criarSala(sala.id.toString(), usuariosString);
     }
+
+    private disconectar(socket: Socket) {
+        socket.disconnect();
+    }
+
 }

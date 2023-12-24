@@ -11,13 +11,15 @@ export class ChatRepository {
         this.db = admin.firestore();
     }
 
-    async criarSala(sala: Sala, usuarios: string[]) {
-        const ref = this.db.collection(this.colection).doc();
-        const novaSala = {
-            ...sala,
-            usuarios: usuarios
-        };
-        return ref.set(novaSala);
+    async adicionarUsuario(salaId: string, usuario: string) {
+        const salaRef = this.db.collection(this.colection).doc(salaId);
+        const sala = await salaRef.get();
+        if (!sala.exists) {
+            throw new Error('Sala não encontrada');
+        }
+        const usuarios = sala.data().usuarios;
+        usuarios.push(usuario);
+        return salaRef.update({ usuarios: usuarios });
     }
 
     async addASala(sala: Sala, usuarios: string[]) {

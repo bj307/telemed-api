@@ -8,5 +8,6 @@ import { MedicoService } from 'src/medico/medico.service';
 @Module({
   controllers: [SessionController],
   providers: [SessionService, AdmService, PacienteService, MedicoService],
+  exports: [SessionService],
 })
 export class SessionModule {}

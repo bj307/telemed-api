@@ -1,5 +1,5 @@
 export interface Sala {
-    id?: number;
+    id?: string;
     nome?: string;
     descricao?: string;
     usuarios?: string[];

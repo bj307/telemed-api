@@ -8,16 +8,16 @@ export class ChatService {
 
     constructor(private readonly chatRepository: ChatRepository) {}
 
-    async criarSala(sala: Sala, usuarios: string[]) {
-        return this.chatRepository.criarSala(sala, usuarios);
+    async criarSala(sala: string, usuarios: string) {
+        return await this.chatRepository.adicionarUsuario(sala, usuarios);
     }
 
     async getSalas() {
-        return this.chatRepository.getSalas();
+        return await this.chatRepository.getSalas();
     }
 
     async addASalaaddASala(sala: Sala, usuarios: string[]) {
-        return this.chatRepository.addASala(sala, usuarios);
+        return await this.chatRepository.addASala(sala, usuarios);
     }
 
 }
