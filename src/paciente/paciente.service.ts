@@ -58,10 +58,12 @@ export class PacienteService {
 
       const pacientes: ShowPacienteDto[] = [];
 
-      snapshot.forEach(async (doc) => {
-        const paciente: ShowPacienteDto = await this.findById(doc.id);
-        pacientes.push(paciente);
-      });
+      await Promise.all(
+        snapshot.docs.map(async (doc) => {
+          const paciente: ShowPacienteDto = await this.findById(doc.id);
+          pacientes.push(paciente);
+        }),
+      );
 
       return pacientes;
     } catch (error) {}
