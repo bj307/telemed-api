@@ -1,5 +1,8 @@
+import { Role } from "src/Role/role.enum";
+
 export class Payload {
-    username: string;
+    nome: string;
     userType: string;
     email: string;
+    role: Role;
 }

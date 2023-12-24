@@ -1,3 +1,4 @@
+import { Role } from './../../Role/role.enum';
 import { ApiProperty } from "@nestjs/swagger";
 import { IsEmail, IsNotEmpty, IsPhoneNumber } from "class-validator";
 
@@ -23,4 +24,6 @@ export class CreatePacienteDto {
   @ApiProperty()3
   @IsPhoneNumber ('BR')
   telefone: number;
+
+  role?: Role;
 }

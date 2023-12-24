@@ -7,6 +7,7 @@ import {
 import { CreateMedicoDto } from './dto/create-medico.dto';
 import { UpdateMedicoDto } from './dto/update-medico.dto';
 import { MedicoRepository } from './Repository/medico.repository';
+import { Role } from 'src/Role/role.enum';
 
 @Injectable()
 export class MedicoService {
@@ -42,7 +43,7 @@ export class MedicoService {
       if (medicoExistenteCRM) {
         throw new ConflictException('CRM já está em uso');
       }
-
+      createMedicoDto.role = Role.Medico;
       return await this.medicoRepository.salvar(createMedicoDto);
     } catch (error) {
       if (error instanceof ConflictException) {
@@ -107,6 +108,7 @@ export class MedicoService {
         }
       }
   
+      updateMedicoDto.role = Role.Medico;
       return await this.medicoRepository.atualizar(id, updateMedicoDto);
   
     } catch (error) {

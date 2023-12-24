@@ -4,6 +4,7 @@ import { UpdatePacienteDto } from './dto/update-paciente.dto';
 import * as admin from 'firebase-admin';
 import * as bcrypt from 'bcrypt';
 import { ShowPacienteDto } from './dto/show-paciente.dto';
+import { Role } from 'src/Role/role.enum';
 
 @Injectable()
 export class PacienteService {
@@ -17,6 +18,7 @@ export class PacienteService {
 
   async create(createPacienteDto: CreatePacienteDto): Promise<ShowPacienteDto> {
     try {
+      createPacienteDto.role = Role.Paciente; 
       let pacienteExists = await this.findByCpf(createPacienteDto.cpf);
 
       if (pacienteExists) {
@@ -66,7 +68,7 @@ export class PacienteService {
       );
 
       return pacientes;
-    } catch (error) {}
+    } catch (error) { }
   }
 
   async findById(id: string) {
@@ -86,10 +88,11 @@ export class PacienteService {
         cpf: data.cpf,
         rg: data.rg,
         telefone: data.telefone,
+        role: data.role,
       };
 
       return showPaciente;
-    } catch (error) {}
+    } catch (error) { }
   }
 
   async findByCpf(cpf: number): Promise<ShowPacienteDto> {
@@ -130,7 +133,7 @@ export class PacienteService {
 
       const paciente = snapshot.docs[0].data();
 
-      return paciente; 
+      return paciente;
     } catch (error) {
       throw new Error('Erro ao buscar: ' + error.message);
     }

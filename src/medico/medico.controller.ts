@@ -14,6 +14,8 @@ import { MedicoService } from './medico.service';
 import { CreateMedicoDto } from './dto/create-medico.dto';
 import { UpdateMedicoDto } from './dto/update-medico.dto';
 import { Public } from 'src/auth/decorator/is-public.decorator';
+import { Roles } from 'src/Role/roles.decorator';
+import { Role } from 'src/Role/role.enum';
 
 @Controller('medico')
 export class MedicoController {
@@ -37,6 +39,7 @@ export class MedicoController {
   }
 
   @Get()
+  @Roles(Role.Medico)
   public async findAll() {
     try {
       return await this.medicoService.findAll();
@@ -53,6 +56,7 @@ export class MedicoController {
   }
 
   @Get()
+  @Roles(Role.Medico)
   public async findByEmail(@Query('email') email: string) {
     try {
       return await this.medicoService.findByEmail(email);
@@ -69,6 +73,7 @@ export class MedicoController {
   }
 
   @Get(':id')
+  @Roles(Role.Medico)
   public async findById(@Param('id') id: string) {
     try {
       return await this.medicoService.findById(id);
@@ -85,6 +90,7 @@ export class MedicoController {
   }
 
   @Put(':id')
+  @Roles(Role.Medico)
   public async update(
     @Param('id') id: string,
     @Body() updateMedicoDto: UpdateMedicoDto,

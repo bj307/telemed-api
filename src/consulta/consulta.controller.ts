@@ -2,6 +2,8 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Put, HttpException, 
 import { ConsultaService } from './consulta.service';
 import { CreateConsultaDto } from './dto/create-consulta.dto';
 import { UpdateConsultaDto } from './dto/update-consulta.dto';
+import { Roles } from 'src/Role/roles.decorator';
+import { Role } from 'src/Role/role.enum';
 
 @Controller('consulta')
 export class ConsultaController {
@@ -9,6 +11,7 @@ export class ConsultaController {
   constructor(private readonly consultaService: ConsultaService) { }
 
   @Post()
+  @Roles(Role.Paciente, Role.Medico)
   async create(@Body() createConsultaDto: CreateConsultaDto) {
 
     const consulta = await this.consultaService.criarConsulta(createConsultaDto);
@@ -19,11 +22,13 @@ export class ConsultaController {
   }
 
   @Get()
+  @Roles(Role.Paciente, Role.Medico)
   async findAll() {
     return await this.consultaService.listarConsultas();
   }
 
   @Get(':id')
+  @Roles(Role.Paciente, Role.Medico)
   async findByID(@Param('id') id: string) {
     const consulta = await this.consultaService.buscarConsultaPorId(id);
     console.log(consulta);
@@ -34,6 +39,7 @@ export class ConsultaController {
   }
 
   @Put(':id')
+  @Roles(Role.Paciente, Role.Medico)
   async update(@Param('id') id: string, @Body() updateConsultaDto: UpdateConsultaDto) {
     const consulta = await this.consultaService.atualizarConsulta(id, updateConsultaDto);
     if (!consulta) {
@@ -43,6 +49,7 @@ export class ConsultaController {
   }
 
   @Delete(':id')
+  @Roles(Role.Paciente, Role.Medico)
   async remove(@Param('id') id: string) {
 
     try {
