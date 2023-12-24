@@ -11,11 +11,13 @@ import { AdmService } from './adm.service';
 import { CreateAdmDto } from './dto/create-adm.dto';
 import { UpdateAdmDto } from './dto/update-adm.dto';
 import { ShowAdmDto } from './dto/show-adm.dto';
+import { Public } from 'src/auth/decorator/is-public.decorator';
 
 @Controller('adm')
 export class AdmController {
   constructor(private readonly admService: AdmService) {}
 
+  @Public()
   @Post('cadastro')
   public async create(@Body() createAdmDto: CreateAdmDto): Promise<ShowAdmDto> {
     const administrador: ShowAdmDto =

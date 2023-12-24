@@ -13,11 +13,13 @@ import {
 import { MedicoService } from './medico.service';
 import { CreateMedicoDto } from './dto/create-medico.dto';
 import { UpdateMedicoDto } from './dto/update-medico.dto';
+import { Public } from 'src/auth/decorator/is-public.decorator';
 
 @Controller('medico')
 export class MedicoController {
   constructor(private readonly medicoService: MedicoService) {}
 
+  @Public()
   @Post()
   public async create(@Body() createMedicoDto: CreateMedicoDto) {
     try {
