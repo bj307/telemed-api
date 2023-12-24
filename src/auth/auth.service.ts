@@ -14,9 +14,9 @@ export class AuthService {
 
 
   async signIn(email, pass) {
+    console.log(email, pass);
 
     const user = await this.validateUser(email, pass);
-
     if (user) {
       return {
         access_token: await this.token(user, user.userType)
@@ -25,7 +25,7 @@ export class AuthService {
       throw new UnauthorizedException("Usuario nao encontrado");
     }
   }
-
+  
   async validateUser(email: string, senha: string) {
 
     try {
@@ -56,9 +56,10 @@ export class AuthService {
 
   private token(user: any, userType: string) {
     const payload: Payload = {
-      username: user.nome,
+      nome: user.nome,
       userType: userType,
-      email: user.email
+      email: user.email,
+      role: user.role
     };
     return this.gerarJwt(payload);
   }

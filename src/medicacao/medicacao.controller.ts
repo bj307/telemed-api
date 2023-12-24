@@ -2,6 +2,8 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Put, HttpException, 
 import { MedicacaoService } from './medicacao.service';
 import { CreateMedicacaoDto } from './dto/create-medicacao.dto';
 import { UpdateMedicacaoDto } from './dto/update-medicacao.dto';
+import { Roles } from 'src/Role/roles.decorator';
+import { Role } from 'src/Role/role.enum';
 
 @Controller('medicacao')
 export class MedicacaoController {
@@ -9,6 +11,7 @@ export class MedicacaoController {
   constructor(private readonly medicacaoService: MedicacaoService) { }
 
   @Post()
+  @Roles(Role.Medico)
   public async create(@Body() createMedicacaoDto: CreateMedicacaoDto) {
     try {
       return await this.medicacaoService.create(createMedicacaoDto);
@@ -23,6 +26,7 @@ export class MedicacaoController {
 
 
   @Get()
+  @Roles(Role.Paciente, Role.Medico)
   public async findAll() {
     try {
       return await this.medicacaoService.findAll();
@@ -37,6 +41,7 @@ export class MedicacaoController {
 
 
   @Get(':id')
+  @Roles(Role.Paciente, Role.Medico)
   public async findById(@Param('id') id: string) {
     try {
       return await this.medicacaoService.findById(id);
@@ -50,6 +55,7 @@ export class MedicacaoController {
   }
 
   @Put(':id')
+  @Roles(Role.Medico)
   public async update(@Param('id') id: string, @Body() updateMedicacaoDto: UpdateMedicacaoDto) {
     try {
       return await this.medicacaoService.update(id, updateMedicacaoDto);
@@ -63,6 +69,7 @@ export class MedicacaoController {
   }
 
   @Delete(':id')
+  @Roles(Role.Medico)
   public async remove(@Param('id') id: string) {
     try {
       return await this.medicacaoService.remove(id);

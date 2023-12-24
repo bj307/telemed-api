@@ -70,6 +70,7 @@ export class MedicoRepository {
         crm: medico.crm,
         telefone: medico.telefone,
         endereco: medico.endereco,
+        role: medico.role,
       } as MedicoResponseDto;
 
     } catch (error) {
