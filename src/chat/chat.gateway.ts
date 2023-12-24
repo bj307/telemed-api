@@ -1,6 +1,15 @@
+/* eslint-disable prettier/prettier */
 import { Server, Socket } from 'socket.io';
-import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
-import { ChatService } from "./chat.service";
+import {
+  ConnectedSocket,
+  MessageBody,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
+  SubscribeMessage,
+  WebSocketGateway,
+  WebSocketServer,
+} from '@nestjs/websockets';
+import { ChatService } from './chat.service';
 import { Chat } from './dto/chat.dto';
 import { OnModuleInit } from '@nestjs/common';
 import { Sala } from './dto/sala.interface';
@@ -15,10 +24,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
     constructor(private chatService: ChatService, 
                 private session :SessionService) { }
 
-    onModuleInit() {
-        console.log('ChatGateway iniciado');
-    }
 
+  onModuleInit() {
+    console.log('ChatGateway iniciado');
+  }
     afterInit(server: Server) {
         console.log('ChatGateway inicializado');
     }
@@ -69,3 +78,4 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
     }
 
 }
+

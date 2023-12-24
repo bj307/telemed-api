@@ -58,9 +58,14 @@ export class PacienteService {
         throw new Error('Nenhum paciente encontrado.');
       }
 
-      const pacientes = await Promise.all(snapshot.docs.map(async (doc) => {
-        return this.findById(doc.id);
-      }));
+      const pacientes: ShowPacienteDto[] = [];
+
+      await Promise.all(
+        snapshot.docs.map(async (doc) => {
+          const paciente: ShowPacienteDto = await this.findById(doc.id);
+          pacientes.push(paciente);
+        }),
+      );
 
       return pacientes;
     } catch (error) { }
