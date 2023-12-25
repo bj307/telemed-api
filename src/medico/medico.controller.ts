@@ -14,8 +14,8 @@ import { MedicoService } from './medico.service';
 import { CreateMedicoDto } from './dto/create-medico.dto';
 import { UpdateMedicoDto } from './dto/update-medico.dto';
 import { Public } from 'src/auth/decorator/is-public.decorator';
-import { Roles } from 'src/Role/roles.decorator';
-import { Role } from 'src/Role/role.enum';
+import { Roles } from 'src/roles/decorators/roles.decorator';
+import { Role } from 'src/roles/enum/role.enum';
 
 @Controller('medico')
 export class MedicoController {

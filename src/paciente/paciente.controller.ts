@@ -13,8 +13,8 @@ import { CreatePacienteDto } from './dto/create-paciente.dto';
 import { UpdatePacienteDto } from './dto/update-paciente.dto';
 import { ShowPacienteDto } from './dto/show-paciente.dto';
 import { Public } from 'src/auth/decorator/is-public.decorator';
-import { Roles } from 'src/Role/roles.decorator';
-import { Role } from 'src/Role/role.enum';
+import { Roles } from 'src/roles/decorators/roles.decorator';
+import { Role } from 'src/roles/enum/role.enum';
 
 @Controller('paciente')
 export class PacienteController {

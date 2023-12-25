@@ -4,7 +4,7 @@ import { UpdatePacienteDto } from './dto/update-paciente.dto';
 import * as admin from 'firebase-admin';
 import * as bcrypt from 'bcrypt';
 import { ShowPacienteDto } from './dto/show-paciente.dto';
-import { Role } from 'src/Role/role.enum';
+import { Role } from 'src/roles/enum/role.enum';
 
 @Injectable()
 export class PacienteService {

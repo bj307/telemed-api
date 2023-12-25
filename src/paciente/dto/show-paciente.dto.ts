@@ -1,4 +1,4 @@
-import { Role } from './../../Role/role.enum';
+import { Role } from '../../roles/enum/role.enum';
 export class ShowPacienteDto {
   id: string;
   nome: string;

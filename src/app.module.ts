@@ -10,7 +10,8 @@ import { ConsultaModule } from './consulta/consulta.module';
 import { ChatModule } from './chat/chat.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
-import { RolesGuard } from './role/guards/roles.guard';
+import { RolesGuard } from './roles/guards/roles.guard';
+import { RolesModule } from './roles/roles.module';
 
 
 @Module({
@@ -23,13 +24,9 @@ import { RolesGuard } from './role/guards/roles.guard';
     ConsultaModule,
     ChatModule,
     AuthModule,
+    RolesModule,
   ],
   controllers: [AppController],
-  providers: [AppService, RolesGuard,
-    {
-      provide: APP_GUARD,
-      useClass: RolesGuard,
-  }
-  ],
+  providers: [AppService, RolesGuard],
 })
 export class AppModule { }
