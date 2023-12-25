@@ -6,6 +6,7 @@ import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   controllers: [RolesController],
+  exports: [RolesGuard],
   providers: [RolesService, RolesGuard,
   {
     provide: APP_GUARD,
