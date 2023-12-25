@@ -39,7 +39,7 @@ export class MedicoController {
   }
 
   @Get()
-  @Roles(Role.Medico)
+  @Roles(Role.MEDICO)
   public async findAll() {
     try {
       return await this.medicoService.findAll();
@@ -56,7 +56,7 @@ export class MedicoController {
   }
 
   @Get()
-  @Roles(Role.Medico)
+  @Roles(Role.MEDICO )
   public async findByEmail(@Query('email') email: string) {
     try {
       return await this.medicoService.findByEmail(email);
@@ -73,7 +73,7 @@ export class MedicoController {
   }
 
   @Get(':id')
-  @Roles(Role.Medico)
+  @Roles(Role.MEDICO)
   public async findById(@Param('id') id: string) {
     try {
       return await this.medicoService.findById(id);
@@ -90,7 +90,7 @@ export class MedicoController {
   }
 
   @Put(':id')
-  @Roles(Role.Medico)
+  @Roles(Role.MEDICO)
   public async update(
     @Param('id') id: string,
     @Body() updateMedicoDto: UpdateMedicoDto,
@@ -110,6 +110,7 @@ export class MedicoController {
   }
 
   @Delete(':id')
+  @Roles(Role.MEDICO, Role.ADM)
   public async remove(@Param('id') id: string) {
     try {
       return await this.medicoService.remove(id);

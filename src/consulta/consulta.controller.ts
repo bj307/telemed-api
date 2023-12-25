@@ -11,7 +11,7 @@ export class ConsultaController {
   constructor(private readonly consultaService: ConsultaService) { }
 
   @Post()
-  @Roles(Role.Paciente, Role.Medico)
+  @Roles(Role.PACIENTE, Role.MEDICO)
   async create(@Body() createConsultaDto: CreateConsultaDto) {
 
     const consulta = await this.consultaService.criarConsulta(createConsultaDto);
@@ -22,13 +22,13 @@ export class ConsultaController {
   }
 
   @Get()
-  @Roles(Role.Paciente, Role.Medico)
+  @Roles(Role.PACIENTE, Role.MEDICO)
   async findAll() {
     return await this.consultaService.listarConsultas();
   }
 
   @Get(':id')
-  @Roles(Role.Paciente, Role.Medico)
+  @Roles(Role.PACIENTE, Role.MEDICO)
   async findByID(@Param('id') id: string) {
     const consulta = await this.consultaService.buscarConsultaPorId(id);
     console.log(consulta);
@@ -39,7 +39,7 @@ export class ConsultaController {
   }
 
   @Put(':id')
-  @Roles(Role.Paciente, Role.Medico)
+  @Roles(Role.PACIENTE, Role.MEDICO)
   async update(@Param('id') id: string, @Body() updateConsultaDto: UpdateConsultaDto) {
     const consulta = await this.consultaService.atualizarConsulta(id, updateConsultaDto);
     if (!consulta) {
@@ -49,7 +49,7 @@ export class ConsultaController {
   }
 
   @Delete(':id')
-  @Roles(Role.Paciente, Role.Medico)
+  @Roles(Role.PACIENTE, Role.MEDICO)
   async remove(@Param('id') id: string) {
 
     try {
