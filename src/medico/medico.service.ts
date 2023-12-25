@@ -43,7 +43,7 @@ export class MedicoService {
       if (medicoExistenteCRM) {
         throw new ConflictException('CRM já está em uso');
       }
-      createMedicoDto.role = Role.Medico;
+      createMedicoDto.role = Role.MEDICO;
       return await this.medicoRepository.salvar(createMedicoDto);
     } catch (error) {
       if (error instanceof ConflictException) {
@@ -108,7 +108,7 @@ export class MedicoService {
         }
       }
   
-      updateMedicoDto.role = Role.Medico;
+      updateMedicoDto.role = Role.MEDICO;
       return await this.medicoRepository.atualizar(id, updateMedicoDto);
   
     } catch (error) {
