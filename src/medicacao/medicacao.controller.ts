@@ -2,8 +2,8 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Put, HttpException, 
 import { MedicacaoService } from './medicacao.service';
 import { CreateMedicacaoDto } from './dto/create-medicacao.dto';
 import { UpdateMedicacaoDto } from './dto/update-medicacao.dto';
-import { Roles } from 'src/roles/decorators/roles.decorator';
-import { Role } from 'src/roles/enum/role.enum';
+import { Roles } from 'src/auth/decorator/roles.decorator';
+import { Role } from 'src/auth/enum/role.enum';
 
 @Controller('medicacao')
 export class MedicacaoController {

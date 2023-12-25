@@ -8,6 +8,7 @@ import * as dotenv from 'dotenv';
 import { AuthGuard } from './guards/auth.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { LocalStrategy } from './strategy/local.strategy';
+import { RolesGuard } from './guards/roles.guard';
 
 dotenv.config();
 
@@ -22,15 +23,20 @@ dotenv.config();
   ],
   controllers: [AuthController],
   providers: [
-    AuthService, 
-    PacienteService, 
-    AuthGuard, 
-    LocalStrategy, 
+    AuthService,
+    PacienteService,
+    AuthGuard,
+    LocalStrategy,
     LocalStrategy,
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
-    }]
+    }, {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    }
+
+  ]
   ,
 })
 export class AuthModule { }

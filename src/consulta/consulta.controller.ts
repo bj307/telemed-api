@@ -2,8 +2,8 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Put, HttpException, 
 import { ConsultaService } from './consulta.service';
 import { CreateConsultaDto } from './dto/create-consulta.dto';
 import { UpdateConsultaDto } from './dto/update-consulta.dto';
-import { Roles } from 'src/roles/decorators/roles.decorator';
-import { Role } from 'src/roles/enum/role.enum';
+import { Roles } from 'src/auth/decorator/roles.decorator';
+import { Role } from 'src/auth/enum/role.enum';
 
 @Controller('consulta')
 export class ConsultaController {
