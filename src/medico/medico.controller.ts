@@ -14,8 +14,6 @@ import { MedicoService } from './medico.service';
 import { CreateMedicoDto } from './dto/create-medico.dto';
 import { UpdateMedicoDto } from './dto/update-medico.dto';
 import { Public } from 'src/auth/decorator/is-public.decorator';
-import { Roles } from 'src/auth/decorator/roles.decorator';
-import { Role } from 'src/auth/model/Role-enum';
 
 @Controller('medico')
 export class MedicoController {
@@ -39,7 +37,7 @@ export class MedicoController {
   }
 
   @Get()
-  @Roles(Role.MEDICO)
+  //@Roles(Role.MEDICO)
   public async findAll() {
     try {
       return await this.medicoService.findAll();
@@ -56,7 +54,7 @@ export class MedicoController {
   }
 
   @Get()
-  @Roles(Role.MEDICO )
+  //@Roles(Role.MEDICO )
   public async findByEmail(@Query('email') email: string) {
     try {
       return await this.medicoService.findByEmail(email);
@@ -73,7 +71,7 @@ export class MedicoController {
   }
 
   @Get(':id')
-  @Roles(Role.MEDICO)
+  //@Roles(Role.MEDICO)
   public async findById(@Param('id') id: string) {
     try {
       return await this.medicoService.findById(id);
@@ -90,7 +88,7 @@ export class MedicoController {
   }
 
   @Put(':id')
-  @Roles(Role.MEDICO)
+  //@Roles(Role.MEDICO)
   public async update(
     @Param('id') id: string,
     @Body() updateMedicoDto: UpdateMedicoDto,
@@ -110,7 +108,7 @@ export class MedicoController {
   }
 
   @Delete(':id')
-  @Roles(Role.MEDICO)
+ // @Roles(Role.MEDICO)
   public async remove(@Param('id') id: string) {
     try {
       return await this.medicoService.remove(id);
