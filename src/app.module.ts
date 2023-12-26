@@ -11,7 +11,6 @@ import { ChatModule } from './chat/chat.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './auth/guards/roles.guard';
-import { RolesModule } from './roles/roles.module';
 
 
 @Module({
@@ -23,10 +22,9 @@ import { RolesModule } from './roles/roles.module';
     MedicacaoModule,
     ConsultaModule,
     ChatModule,
-    AuthModule,
-    RolesModule,
+    AuthModule
   ],
   controllers: [AppController],
-  providers: [AppService, RolesGuard],
+  providers: [AppService],
 })
 export class AppModule { }
