@@ -28,14 +28,15 @@ dotenv.config();
     AuthGuard,
     LocalStrategy,
     LocalStrategy,
+    RolesGuard,
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
-    }, {
+    }/*, {
       provide: APP_GUARD,
       useClass: RolesGuard,
     }
-
+*/
   ]
   ,
 })
