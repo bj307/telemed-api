@@ -1,4 +1,4 @@
-import { Role } from "src/auth/model/role-enum";
+import { Role } from "src/auth/model/Role-enum";
 
 export class MedicoResponseDto {
     id?: string;

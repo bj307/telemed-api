@@ -15,7 +15,7 @@ import { CreateMedicoDto } from './dto/create-medico.dto';
 import { UpdateMedicoDto } from './dto/update-medico.dto';
 import { Public } from 'src/auth/decorator/is-public.decorator';
 import { Roles } from 'src/auth/decorator/roles.decorator';
-import { Role } from 'src/auth/model/role-enum';
+import { Role } from 'src/auth/model/Role-enum';
 
 @Controller('medico')
 export class MedicoController {

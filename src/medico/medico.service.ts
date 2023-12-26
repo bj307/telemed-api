@@ -7,7 +7,7 @@ import {
 import { CreateMedicoDto } from './dto/create-medico.dto';
 import { UpdateMedicoDto } from './dto/update-medico.dto';
 import { MedicoRepository } from './Repository/medico.repository';
-import { Role } from 'src/auth/model/role-enum';
+import { Role } from 'src/auth/model/Role-enum';
 
 @Injectable()
 export class MedicoService {

@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsEmail, IsNotEmpty, IsPhoneNumber, Min, MinLength } from "class-validator";
 import { IsCPF } from "class-validator-cpf";
-import { Role } from "src/auth/model/role-enum";
+import { Role } from "src/auth/model/Role-enum";
 
 export class CreateMedicoDto {
 
