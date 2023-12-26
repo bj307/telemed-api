@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { PacienteService } from 'src/paciente/paciente.service';
@@ -14,7 +14,7 @@ dotenv.config();
 
 @Module({
   imports: [
-    MedicoModule,
+    forwardRef(() => MedicoModule),
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET,
@@ -37,7 +37,8 @@ dotenv.config();
       useClass: RolesGuard,
     }
 */
-  ]
+  ],
+  exports: [AuthModule]
   ,
 })
 export class AuthModule { }
