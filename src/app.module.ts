@@ -9,8 +9,6 @@ import { MedicacaoModule } from './medicacao/medicacao.module';
 import { ConsultaModule } from './consulta/consulta.module';
 import { ChatModule } from './chat/chat.module';
 import { AuthModule } from './auth/auth.module';
-import { RoleModule } from './role/role.module';
-
 
 @Module({
   imports: [
@@ -21,12 +19,9 @@ import { RoleModule } from './role/role.module';
     MedicacaoModule,
     ConsultaModule,
     ChatModule,
-    AuthModule,
-    RoleModule,
-
+    AuthModule
   ],
   controllers: [AppController],
-  providers: [AppService,
-  ],
+  providers: [AppService],
 })
 export class AppModule { }

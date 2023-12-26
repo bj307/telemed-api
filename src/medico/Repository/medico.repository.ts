@@ -69,8 +69,7 @@ export class MedicoRepository {
         cpf: medico.cpf,
         crm: medico.crm,
         telefone: medico.telefone,
-        endereco: medico.endereco,
-        role: medico.role,
+        endereco: medico.endereco
       } as MedicoResponseDto;
 
     } catch (error) {

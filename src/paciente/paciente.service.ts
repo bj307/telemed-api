@@ -4,7 +4,6 @@ import { UpdatePacienteDto } from './dto/update-paciente.dto';
 import * as admin from 'firebase-admin';
 import * as bcrypt from 'bcrypt';
 import { ShowPacienteDto } from './dto/show-paciente.dto';
-import { Role } from 'src/Role/role.enum';
 
 @Injectable()
 export class PacienteService {
@@ -18,7 +17,9 @@ export class PacienteService {
 
   async create(createPacienteDto: CreatePacienteDto): Promise<ShowPacienteDto> {
     try {
-      createPacienteDto.role = Role.Paciente; 
+     
+      //createPacienteDto.role = Role.PACIENTE; 
+      
       let pacienteExists = await this.findByCpf(createPacienteDto.cpf);
 
       if (pacienteExists) {
@@ -88,7 +89,6 @@ export class PacienteService {
         cpf: data.cpf,
         rg: data.rg,
         telefone: data.telefone,
-        role: data.role,
       };
 
       return showPaciente;

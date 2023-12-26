@@ -1,4 +1,4 @@
-import { Role } from './../../Role/role.enum';
+import { Role } from '../../auth/model/Role-enum';
 export class ShowPacienteDto {
   id: string;
   nome: string;
@@ -6,5 +6,4 @@ export class ShowPacienteDto {
   cpf: number;
   rg: number;
   telefone: number;
-  role: Role;
 }

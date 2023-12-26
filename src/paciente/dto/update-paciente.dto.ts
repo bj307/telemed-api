@@ -1,4 +1,3 @@
-import { Role } from "src/Role/role.enum";
 
 export class UpdatePacienteDto {
   nome?: string;
@@ -7,5 +6,5 @@ export class UpdatePacienteDto {
   cpf?: number;
   rg?: number;
   telefone?: number;
-  role?: Role;
+  //role?: Role;
 }
