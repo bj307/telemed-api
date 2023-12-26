@@ -1,7 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsEmail, IsNotEmpty, IsPhoneNumber, Min, MinLength } from "class-validator";
 import { IsCPF } from "class-validator-cpf";
-import { Role } from "src/auth/model/Role-enum";
 
 export class CreateMedicoDto {
 
@@ -47,5 +46,5 @@ export class CreateMedicoDto {
   @IsPhoneNumber('BR')
   telefone: string;
 
-  role?: Role;
+  //role?: Role;
 }

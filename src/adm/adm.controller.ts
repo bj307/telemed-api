@@ -12,7 +12,6 @@ import { CreateAdmDto } from './dto/create-adm.dto';
 import { UpdateAdmDto } from './dto/update-adm.dto';
 import { ShowAdmDto } from './dto/show-adm.dto';
 import { Public } from 'src/auth/decorator/is-public.decorator';
-import { Role } from 'src/auth/model/Role-enum';
 
 @Controller('adm')
 export class AdmController {
