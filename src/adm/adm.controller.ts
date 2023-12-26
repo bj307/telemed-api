@@ -12,6 +12,8 @@ import { CreateAdmDto } from './dto/create-adm.dto';
 import { UpdateAdmDto } from './dto/update-adm.dto';
 import { ShowAdmDto } from './dto/show-adm.dto';
 import { Public } from 'src/auth/decorator/is-public.decorator';
+import { Role } from 'src/auth/model/Role-enum';
+import { Roles } from 'src/auth/decorator/roles.decorator';
 
 @Controller('adm')
 export class AdmController {
@@ -19,6 +21,7 @@ export class AdmController {
 
   @Public()
   @Post('cadastro')
+  @Roles(Role.ADMIN)
   public async create(@Body() createAdmDto: CreateAdmDto): Promise<ShowAdmDto> {
     const administrador: ShowAdmDto =
       await this.admService.create(createAdmDto);
@@ -29,6 +32,7 @@ export class AdmController {
   }
 
   @Get(':id')
+  @Roles(Role.ADMIN)
   public async findById(@Param('id') id: string): Promise<ShowAdmDto> {
     const administrador: ShowAdmDto = await this.admService.findById(id);
     if (!administrador) {
@@ -38,6 +42,7 @@ export class AdmController {
   }
 
   @Put(':id')
+  @Roles(Role.ADMIN)
   public async update(
     @Param('id') id: string,
     @Body() updateAdmDto: UpdateAdmDto,
@@ -53,6 +58,7 @@ export class AdmController {
   }
 
   @Delete(':id')
+  @Roles(Role.ADMIN)
   public async remove(@Param('id') id: string): Promise<string> {
     const message = await this.admService.remove(id);
     if (!message) {

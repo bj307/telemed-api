@@ -110,7 +110,7 @@ export class MedicoController {
   }
 
   @Delete(':id')
-  @Roles(Role.MEDICO, Role.ADM)
+  @Roles(Role.MEDICO)
   public async remove(@Param('id') id: string) {
     try {
       return await this.medicoService.remove(id);

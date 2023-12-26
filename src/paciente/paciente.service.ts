@@ -18,7 +18,9 @@ export class PacienteService {
 
   async create(createPacienteDto: CreatePacienteDto): Promise<ShowPacienteDto> {
     try {
+     
       createPacienteDto.role = Role.PACIENTE; 
+      
       let pacienteExists = await this.findByCpf(createPacienteDto.cpf);
 
       if (pacienteExists) {
