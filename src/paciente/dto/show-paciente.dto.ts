@@ -1,4 +1,4 @@
-import { Role } from '../../auth/enum/role.enum';
+import { Role } from '../../auth/model/role-enum';
 export class ShowPacienteDto {
   id: string;
   nome: string;

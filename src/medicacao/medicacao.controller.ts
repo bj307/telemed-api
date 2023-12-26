@@ -3,7 +3,7 @@ import { MedicacaoService } from './medicacao.service';
 import { CreateMedicacaoDto } from './dto/create-medicacao.dto';
 import { UpdateMedicacaoDto } from './dto/update-medicacao.dto';
 import { Roles } from 'src/auth/decorator/roles.decorator';
-import { Role } from 'src/auth/enum/role.enum';
+import { Role } from 'src/auth/model/role-enum';
 
 @Controller('medicacao')
 export class MedicacaoController {

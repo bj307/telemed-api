@@ -3,7 +3,7 @@ import { ConsultaService } from './consulta.service';
 import { CreateConsultaDto } from './dto/create-consulta.dto';
 import { UpdateConsultaDto } from './dto/update-consulta.dto';
 import { Roles } from 'src/auth/decorator/roles.decorator';
-import { Role } from 'src/auth/enum/role.enum';
+import { Role } from 'src/auth/model/role-enum';
 
 @Controller('consulta')
 export class ConsultaController {

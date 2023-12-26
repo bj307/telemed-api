@@ -14,7 +14,7 @@ import { UpdatePacienteDto } from './dto/update-paciente.dto';
 import { ShowPacienteDto } from './dto/show-paciente.dto';
 import { Public } from 'src/auth/decorator/is-public.decorator';
 import { Roles } from 'src/auth/decorator/roles.decorator';
-import { Role } from 'src/auth/enum/role.enum';
+import { Role } from 'src/auth/model/role-enum';
 
 @Controller('paciente')
 export class PacienteController {
