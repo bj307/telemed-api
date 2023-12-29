@@ -1,97 +1,131 @@
 import { MedicoService } from './../medico/medico.service';
-import { HttpException, HttpStatus, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { PacienteService } from 'src/paciente/paciente.service';
 import { JwtService } from '@nestjs/jwt';
 import { Payload } from './model/payload';
+import { AdmService } from 'src/adm/adm.service';
+import { LoginDTO } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
+  constructor(
+    private readonly medicoService: MedicoService,
+    private readonly pacienteService: PacienteService,
+    private readonly jwtService: JwtService,
+    private readonly admService: AdmService,
+  ) {}
 
-  constructor(private medicoService: MedicoService,
-    private pacienteService: PacienteService,
-    private jwtService: JwtService) { }
-
-
-  async signIn(email, pass) {
-    console.log(email, pass);
-
-    const user = await this.validateUser(email, pass);
-    if (user) {
-      return {
-        access_token: await this.token(user, user.userType)
-      };
-    } else {
-      throw new UnauthorizedException("Usuario nao encontrado");
-    }
-  }
-  
-  async validateUser(email: string, senha: string) {
-
+  async loginAdm(login: LoginDTO) {
     try {
-      const medico = await this.medicoService.findByEmail(email);
-      const paciente = await this.pacienteService.findByEmail(email);
-  
-      let user;
-      let userType;
-  
-      if (medico) {
-        user = medico;
-        userType = 'medico';
-      } else if (paciente) {
-        user = paciente;
-        userType = 'paciente';
+      const valid = await this.admService.checkPassword(
+        login.senha,
+        login.email,
+      );
+
+      if (!valid) {
+        throw new NotFoundException('Credenciais inválidas.');
       }
-      const passwordTrue = await this.compareSenhas(senha, user.senha);
-      if (user && passwordTrue) {
-        const { id, name, email } = user
-        return { id, name, email , userType }
-      }
+
+      const adm = await this.admService.findByEmail(login.email);
+
+      return {
+        access_token: await this.token(adm, 'adm'),
+      };
     } catch (error) {
-      throw new UnauthorizedException();
+      throw new Error(error.message);
     }
   }
 
+  async loginMedico(login: LoginDTO) {
+    try {
+      const crmValid = await this.medicoService.checkCRM(
+        login.crm,
+        login.email,
+      );
 
+      if (!crmValid) {
+        throw new NotFoundException('Email e CRM incompatíveis.');
+      }
 
-  private token(user: any, userType: string) {
+      const valid = await this.medicoService.checkPassword(
+        login.senha,
+        login.email,
+      );
+
+      if (!valid) {
+        throw new NotFoundException('Credenciais inválidas.');
+      }
+
+      const medico = await this.medicoService.findByEmail(login.email);
+
+      return {
+        access_token: await this.token(medico, 'medico'),
+      };
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  async loginPaciente(login: LoginDTO) {
+    try {
+      const cpfValid = await this.pacienteService.checkCPF(
+        login.cpf,
+        login.email,
+      );
+
+      if (!cpfValid) {
+        throw new NotFoundException('Email e CPF incompatíveis.');
+      }
+
+      const valid = await this.pacienteService.checkPassword(
+        login.senha,
+        login.email,
+      );
+
+      if (!valid) {
+        throw new NotFoundException('Credenciais inválidas.');
+      }
+
+      const paciente = await this.pacienteService.findByEmail(login.email);
+
+      return {
+        access_token: await this.token(paciente, 'paciente'),
+      };
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  private async token(user: any, userType: string) {
     const payload: Payload = {
       nome: user.nome,
       userType: userType,
       email: user.email,
-      role: user.role
+      role: user.role,
+      id: user.id,
     };
-    return this.gerarJwt(payload);
+    return await this.gerarJwt(payload);
   }
-
 
   async gerarJwt(payload: Payload) {
     try {
       return await this.jwtService.signAsync(payload);
     } catch (error) {
-      throw new InternalServerErrorException('Erro ao gerar token');
+      throw new InternalServerErrorException('Erro ao gerar token.');
     }
   }
-
 
   async verifyJwt(jwt: string): Promise<any> {
     try {
       return await this.jwtService.verifyAsync(jwt);
     } catch (error) {
-      throw new HttpException('Token inválido', HttpStatus.BAD_REQUEST); 
+      throw new HttpException('Token inválido', HttpStatus.BAD_REQUEST);
     }
   }
-
-  async hashSenha(password: string): Promise<string> {
-    return await bcrypt.hash(password, 12);
-  }
-
-  async compareSenhas(senha: string, senhaHash: string): Promise<any> {
-    try {
-      return await bcrypt.compare(senha, senhaHash);
-    } catch (error) {
-      throw new Error('Erro ao comparar senhas');
-    }
-  }
-
 }
