@@ -9,6 +9,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { LocalStrategy } from './strategy/local.strategy';
 import { RolesGuard } from './guards/roles.guard';
+import { AdmService } from 'src/adm/adm.service';
 
 dotenv.config();
 
@@ -29,16 +30,16 @@ dotenv.config();
     LocalStrategy,
     LocalStrategy,
     RolesGuard,
+    AdmService,
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
-    }/*, {
+    } /*, {
       provide: APP_GUARD,
       useClass: RolesGuard,
     }
-*/
+*/,
   ],
-  exports: [AuthModule]
-  ,
+  exports: [AuthModule],
 })
-export class AuthModule { }
+export class AuthModule {}

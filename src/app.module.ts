@@ -3,7 +3,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AdmModule } from './adm/adm.module';
 import { MedicoModule } from './medico/medico.module';
-import { SessionModule } from './session/session.module';
 import { PacienteModule } from './paciente/paciente.module';
 import { MedicacaoModule } from './medicacao/medicacao.module';
 import { ConsultaModule } from './consulta/consulta.module';
@@ -14,14 +13,13 @@ import { AuthModule } from './auth/auth.module';
   imports: [
     AdmModule,
     MedicoModule,
-    SessionModule,
     PacienteModule,
     MedicacaoModule,
     ConsultaModule,
     ChatModule,
-    AuthModule
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
