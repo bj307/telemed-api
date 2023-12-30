@@ -31,16 +31,17 @@ dotenv.config();
     LocalStrategy,
     LocalStrategy,
     RolesGuard,
+    AdmService,
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
-    }/*, {
+    } /*, {
       provide: APP_GUARD,
       useClass: RolesGuard,
     }
-*/
+*/,
   ],
   exports: [AuthModule,AuthService]
   ,
 })
-export class AuthModule { }
+export class AuthModule {}

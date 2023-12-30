@@ -17,9 +17,8 @@ export class PacienteService {
 
   async create(createPacienteDto: CreatePacienteDto): Promise<ShowPacienteDto> {
     try {
-     
-      //createPacienteDto.role = Role.PACIENTE; 
-      
+      //createPacienteDto.role = Role.PACIENTE;
+
       let pacienteExists = await this.findByCpf(createPacienteDto.cpf);
 
       if (pacienteExists) {
@@ -69,7 +68,7 @@ export class PacienteService {
       );
 
       return pacientes;
-    } catch (error) { }
+    } catch (error) {}
   }
 
   async findById(id: string) {
@@ -92,7 +91,7 @@ export class PacienteService {
       };
 
       return showPaciente;
-    } catch (error) { }
+    } catch (error) {}
   }
 
   async findByCpf(cpf: number): Promise<ShowPacienteDto> {
@@ -100,12 +99,12 @@ export class PacienteService {
       const collectionRef = this.db.collection(this.collection);
       const snapshot = await collectionRef.where('cpf', '==', cpf).get();
       if (snapshot.empty) {
-        return;
+        throw new Error('Nenhum paciente com esse CPF.');
       }
 
       return await this.findById(snapshot.docs[0].id);
     } catch (error) {
-      throw new Error('Erro ao buscar: ' + error.message);
+      throw new Error(error.message);
     }
   }
 
@@ -114,12 +113,12 @@ export class PacienteService {
       const collectionRef = this.db.collection(this.collection);
       const snapshot = await collectionRef.where('rg', '==', rg).get();
       if (snapshot.empty) {
-        return;
+        throw new Error('Nenhum paciente com esse RG.');
       }
 
       return await this.findById(snapshot.docs[0].id);
     } catch (error) {
-      throw new Error('Erro ao buscar: ' + error.message);
+      throw new Error(error.message);
     }
   }
 
@@ -128,12 +127,12 @@ export class PacienteService {
       const collectionRef = this.db.collection(this.collection);
       const snapshot = await collectionRef.where('email', '==', email).get();
       if (snapshot.empty) {
-        return;
+        throw new Error('Nenhum paciente com esse email.');
       }
 
       return await this.findById(snapshot.docs[0].id);
     } catch (error) {
-      throw new Error('Erro ao buscar: ' + error.message);
+      throw new Error(error.message);
     }
   }
 
@@ -165,16 +164,13 @@ export class PacienteService {
 
   async checkCPF(cpf: number, email: string): Promise<boolean> {
     try {
-      const collectionRef = this.db.collection(this.collection);
-      const snapshot = await collectionRef.where('email', '==', email).get();
+      const pacienteExists = await this.findByEmail(email);
 
-      if (!snapshot.docs[0].exists) {
+      if (!pacienteExists) {
         throw new Error('Paciente não existe.');
       }
 
-      const paciente = snapshot.docs[0].data();
-
-      if (paciente.cpf == cpf) {
+      if (pacienteExists.cpf == cpf) {
         return true;
       } else {
         return false;

@@ -1,4 +1,4 @@
-import { Role } from "src/auth/model/Role-enum";
+import { Role } from 'src/auth/model/Role-enum';
 
 export class Payload {
     nome?: string;
