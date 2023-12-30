@@ -110,11 +110,11 @@ export class ConsultaRepository {
       }
     }
 
-    if (consultaAtualizacao.medico != undefined &&  
-          consultaAtualizacao.dataDaConsulta != undefined && 
-          consultaAtualizacao.horarioConsulta != undefined) {
-      
-          const horarioOcupado = await this.verificarHorario(
+    if (consultaAtualizacao.medico != undefined &&
+      consultaAtualizacao.dataDaConsulta != undefined &&
+      consultaAtualizacao.horarioConsulta != undefined) {
+
+      const horarioOcupado = await this.verificarHorario(
         consultaAtualizacao.medico,
         consultaAtualizacao.dataDaConsulta,
         consultaAtualizacao.horarioConsulta
@@ -123,6 +123,24 @@ export class ConsultaRepository {
         throw new ConflictException('Já existe uma consulta agendada para este médico neste horário.');
       }
     }
+  }
+
+  async buscarConsultasPorPaciente(id: string) {
+    const snapshot = await this.db.collection(this.collectionName)
+      .where('paciente', '==', id)
+      .where('status', '==', 'AGENDADO')
+      .get();
+    const consultas = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return consultas;
+  }
+
+  async buscarConsultasPorMedico(id: string) {
+    const snapshot = await this.db.collection(this.collectionName)
+      .where('medico', '==', id)
+      .where('status', '==', 'AGENDADO')
+      .get();
+    const consultas = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return consultas;
   }
 
 }

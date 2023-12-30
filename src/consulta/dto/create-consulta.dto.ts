@@ -47,4 +47,6 @@ export class CreateConsultaDto {
     @IsDate()
     @IsNotEmpty()
     dataCriacao ?: Date = new Date();
+
+    sala?: string;
 }

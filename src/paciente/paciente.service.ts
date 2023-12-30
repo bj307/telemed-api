@@ -131,9 +131,7 @@ export class PacienteService {
         return;
       }
 
-      const paciente = snapshot.docs[0].data();
-
-      return paciente;
+      return await this.findById(snapshot.docs[0].id);
     } catch (error) {
       throw new Error('Erro ao buscar: ' + error.message);
     }

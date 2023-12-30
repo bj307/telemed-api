@@ -9,11 +9,13 @@ import { AuthGuard } from './guards/auth.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { LocalStrategy } from './strategy/local.strategy';
 import { RolesGuard } from './guards/roles.guard';
+import { AdmModule } from 'src/adm/adm.module';
 
 dotenv.config();
 
 @Module({
   imports: [
+    AdmModule,
     forwardRef(() => MedicoModule),
     JwtModule.register({
       global: true,
@@ -38,7 +40,7 @@ dotenv.config();
     }
 */
   ],
-  exports: [AuthModule]
+  exports: [AuthModule,AuthService]
   ,
 })
 export class AuthModule { }

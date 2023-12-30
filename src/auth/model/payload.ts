@@ -5,4 +5,5 @@ export class Payload {
     userType?: string;
     email?: string;
     role?: Role;
+    id?: string;
 }

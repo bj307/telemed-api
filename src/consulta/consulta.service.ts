@@ -6,10 +6,11 @@ import { MedicoService } from 'src/medico/medico.service';
 import { MedicacaoService } from 'src/medicacao/medicacao.service';
 import { PacienteService } from 'src/paciente/paciente.service';
 import { ResponseConsulta } from './dto/response-consulta.dto';
-
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class ConsultaService {
+
   constructor(
     private readonly consultaRepository: ConsultaRepository,
     private readonly medicoService: MedicoService,
@@ -38,6 +39,7 @@ export class ConsultaService {
     }
 
     try {
+      createConsultaDto.sala = uuidv4();
       return await this.consultaRepository.createConsulta(createConsultaDto);
     } catch (error) {
       if (error instanceof ConflictException) {
@@ -56,30 +58,30 @@ export class ConsultaService {
   }
 
   async buscarConsultaPorId(id: string) {
-      const consulta = await this.consultaRepository.buscarID(id);
+    const consulta = await this.consultaRepository.buscarID(id);
 
-      console.log(consulta);
+    console.log(consulta);
 
-      if (!consulta) {
-        throw new NotFoundException(`Consulta com  ${id} não encontrada`);
-      }
+    if (!consulta) {
+      throw new NotFoundException(`Consulta com  ${id} não encontrada`);
+    }
 
-      const medico = await this.medicoService.findById(consulta.medico);
-      const paciente = await this.pacienteService.findById(consulta.paciente);
-      const medicacao = await this.medicacaoService.findById(consulta.medicacao);
+    const medico = await this.medicoService.findById(consulta.medico);
+    const paciente = await this.pacienteService.findById(consulta.paciente);
+    const medicacao = await this.medicacaoService.findById(consulta.medicacao);
 
-      const responseConsulta: ResponseConsulta = {
-        id: consulta.id,
-        medico: medico,
-        paciente: paciente,
-        medicacao: medicacao,
-        status: consulta.status,
-        duracao: consulta.duracaoConsulta,
-        horario: consulta.horarioConsulta,
-        data: consulta.dataDaConsulta
+    const responseConsulta: ResponseConsulta = {
+      id: consulta.id,
+      medico: medico,
+      paciente: paciente,
+      medicacao: medicacao,
+      status: consulta.status,
+      duracao: consulta.duracaoConsulta,
+      horario: consulta.horarioConsulta,
+      data: consulta.dataDaConsulta
 
-      }
-      return responseConsulta;
+    }
+    return responseConsulta;
   }
 
   async atualizarConsulta(id: string, updateConsultaDto: UpdateConsultaDto) {
@@ -89,7 +91,7 @@ export class ConsultaService {
         throw new NotFoundException(`Consulta com ID ${id} não encontrada`);
       }
       return consultaAtualizada;
-      
+
     } catch (error) {
       throw new BadRequestException(error.message);
     }
@@ -102,6 +104,30 @@ export class ConsultaService {
     }
     try {
       this.consultaRepository.deleteConsulta(id);
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  async buscarConsultasPorPacienteID(id: string) {
+    try {
+      const consultas = await this.consultaRepository.buscarConsultasPorPaciente(id);
+      if (consultas.length == 0) {
+        throw new NotFoundException(`Paciente com id ${id} não possui consultas`);
+      }
+      return consultas;
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  async buscarConsultasPorMedicoID(id: string) {
+    try {
+      const consultas = await this.consultaRepository.buscarConsultasPorMedico(id);
+      if (consultas.length == 0) {
+        throw new NotFoundException(`Médico com id ${id} não possui consultas`);
+      }
+      return consultas;
     } catch (error) {
       throw new BadRequestException(error.message);
     }

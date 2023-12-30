@@ -126,7 +126,10 @@ export class MedicoRepository {
 
       const doc = snapshot.docs[0];
 
-      return doc.data();
+      const data = doc.data();
+      data.id = doc.id;
+
+      return data;
 
     } catch (error) {
       throw new InternalServerErrorException(
