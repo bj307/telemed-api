@@ -10,6 +10,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { LocalStrategy } from './strategy/local.strategy';
 import { RolesGuard } from './guards/roles.guard';
 import { AdmModule } from 'src/adm/adm.module';
+import { AdmService } from 'src/adm/adm.service';
 
 dotenv.config();
 
