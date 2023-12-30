@@ -19,7 +19,7 @@ export class AuthService {
     private readonly pacienteService: PacienteService,
     private readonly jwtService: JwtService,
     private readonly admService: AdmService,
-  ) {}
+  ) { }
 
   async loginAdm(login: LoginDTO) {
     try {
@@ -93,7 +93,7 @@ export class AuthService {
       }
 
       const paciente = await this.pacienteService.findByEmail(login.email);
-
+      console.log('paciente', paciente);
       return {
         access_token: await this.token(paciente, 'paciente'),
       };

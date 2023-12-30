@@ -42,6 +42,7 @@ export class MedicoService {
       if (medicoExistenteCRM) {
         throw new ConflictException('CRM já está em uso');
       }
+      
       return await this.medicoRepository.salvar(createMedicoDto);
     } catch (error) {
       if (error instanceof ConflictException) {

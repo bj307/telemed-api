@@ -11,5 +11,6 @@ import { MedicacaoService } from 'src/medicacao/medicacao.service';
 @Module({
   controllers: [ConsultaController],
   providers: [ConsultaService, ConsultaRepository, MedicoService, PacienteService, MedicacaoService],
+  exports: [ConsultaService]
 })
 export class ConsultaModule {}
