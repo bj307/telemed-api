@@ -2,9 +2,8 @@ import { UpdateMedicacaoDto } from './../dto/update-medicacao.dto';
 import * as admin from 'firebase-admin';
 import { CreateMedicacaoDto } from '../dto/create-medicacao.dto';
 import { ResponseMedicacaoDto } from '../dto/response.medicacao.dto';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { MedicacaoNotFoundException } from '../exception/MedicacaoNotFoundException';
-import { InternalServerErrorException } from 'src/Exception/InternalServerErrorException';
+import { InternalServerErrorException } from '@nestjs/common';
 
 export class MedicacaoRepository {
 

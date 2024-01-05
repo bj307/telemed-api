@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { CreateMedicoDto } from '../dto/create-medico.dto';
 import { UpdateMedicoDto } from '../dto/update-medico.dto';
@@ -8,7 +9,6 @@ import { MedicoRepository } from '../Repository/medico.repository';
 import { CpfEmUsoException, CrmEmUsoException, EmailEmUsoException } from '../exception/exception-medico';
 import { MedicoNotFoundException } from '../exception/medicoNotFound';
 import { InvalidMedicoDataException } from '../exception/medicoInvalida';
-import { InternalServerErrorException } from 'src/Exception/InternalServerErrorException';
 
 @Injectable()
 export class MedicoService {
