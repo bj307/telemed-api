@@ -7,10 +7,10 @@ import {
   Delete,
   Put,
 } from '@nestjs/common';
-import { AdmService } from './adm.service';
-import { CreateAdmDto } from './dto/create-adm.dto';
-import { UpdateAdmDto } from './dto/update-adm.dto';
-import { ShowAdmDto } from './dto/show-adm.dto';
+import { AdmService } from '../service/adm.service';
+import { CreateAdmDto } from '../dto/create-adm.dto';
+import { UpdateAdmDto } from '../dto/update-adm.dto';
+import { ShowAdmDto } from '../dto/show-adm.dto';
 import { Public } from 'src/auth/decorator/is-public.decorator';
 
 @Controller('adm')

@@ -8,10 +8,10 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { PacienteService } from './paciente.service';
-import { CreatePacienteDto } from './dto/create-paciente.dto';
-import { UpdatePacienteDto } from './dto/update-paciente.dto';
-import { ShowPacienteDto } from './dto/show-paciente.dto';
+import { PacienteService } from '../service/paciente.service';
+import { CreatePacienteDto } from '../dto/create-paciente.dto';
+import { UpdatePacienteDto } from '../dto/update-paciente.dto';
+import { ShowPacienteDto } from '../dto/show-paciente.dto';
 import { Public } from 'src/auth/decorator/is-public.decorator';
 
 @Controller('paciente')

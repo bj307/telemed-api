@@ -7,12 +7,13 @@ import {
   HttpStatus,
   HttpCode,
   UseGuards,
+  UnauthorizedException,
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { AuthService } from '../service/auth.service';
 
 import { AuthGuard } from '@nestjs/passport';
-import { Public } from './decorator/is-public.decorator';
-import { LoginDTO } from './dto/login.dto';
+import { Public } from '../decorator/is-public.decorator';
+import { LoginDTO } from '../dto/login.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -30,7 +31,7 @@ export class AuthController {
       } else if (!login.cpf && !login.crm) {
         return await this.authService.loginAdm(login);
       } else {
-        throw new Error('Credenciais inválidas.');
+        throw new UnauthorizedException('Credenciais inválidas.');
       }
     } catch (error) {
       return error.message;

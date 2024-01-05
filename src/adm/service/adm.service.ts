@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { CreateAdmDto } from './dto/create-adm.dto';
-import { UpdateAdmDto } from './dto/update-adm.dto';
+import { CreateAdmDto } from '../dto/create-adm.dto';
+import { UpdateAdmDto } from '../dto/update-adm.dto';
 import * as admin from 'firebase-admin';
 import * as bcrypt from 'bcrypt';
-import { ShowAdmDto } from './dto/show-adm.dto';
+import { ShowAdmDto } from '../dto/show-adm.dto';
 
 @Injectable()
 export class AdmService {

@@ -8,6 +8,7 @@ import { MedicacaoModule } from './medicacao/medicacao.module';
 import { ConsultaModule } from './consulta/consulta.module';
 import { ChatModule } from './chat/chat.module';
 import { AuthModule } from './auth/auth.module';
+import { HttpExceptionFilter } from './Exception/Exception-filter';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { AuthModule } from './auth/auth.module';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService
+  ],
 })
 export class AppModule {}

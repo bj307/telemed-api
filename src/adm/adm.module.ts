@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { AdmService } from './adm.service';
-import { AdmController } from './adm.controller';
+import { AdmService } from './service/adm.service';
+import { AdmController } from './controller/adm.controller';
 
 @Module({
   controllers: [AdmController],

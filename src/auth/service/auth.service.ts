@@ -1,4 +1,4 @@
-import { MedicoService } from './../medico/medico.service';
+import { MedicoService } from '../../medico/service/medico.service';
 import {
   HttpException,
   HttpStatus,
@@ -6,11 +6,11 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { PacienteService } from 'src/paciente/paciente.service';
+import { PacienteService } from 'src/paciente/service/paciente.service';
 import { JwtService } from '@nestjs/jwt';
-import { Payload } from './model/payload';
-import { AdmService } from 'src/adm/adm.service';
-import { LoginDTO } from './dto/login.dto';
+import { Payload } from '../model/payload';
+import { AdmService } from 'src/adm/service/adm.service';
+import { LoginDTO } from '../dto/login.dto';
 
 @Injectable()
 export class AuthService {
