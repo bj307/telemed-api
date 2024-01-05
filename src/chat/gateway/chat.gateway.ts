@@ -9,7 +9,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Logger, OnModuleInit } from '@nestjs/common';
-import { AuthService } from 'src/auth/auth.service';
+import { AuthService } from 'src/auth/service/auth.service';
 import { ChatService } from '../service/chat.service';
 import { ConsultaI } from 'src/consulta/dto/consulta-interface';
 
@@ -48,7 +48,11 @@ export class ChatGateway implements OnModuleInit, OnGatewayConnection, OnGateway
 
   @SubscribeMessage('sendMessage')
   handleSendMessage(@MessageBody() mensagem: any) {
-    this.server.to(mensagem.sala).emit('receiveMessage', mensagem);
+    this.server.to(mensagem.sala).emit('receiveMessage', {
+      mensagem: mensagem.mensagem,
+      remetente: mensagem.sender,
+      sala: mensagem.sala
+    });
   }
 
 

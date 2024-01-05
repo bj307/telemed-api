@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { ChatRepository } from '../repository/chat-repository';
 import { Sala } from "../dto/sala.interface";
-import { ConsultaService } from "src/consulta/consulta.service";
-import { AuthService } from "src/auth/auth.service";
+import { ConsultaService } from "src/consulta/service/consulta.service";
+import { AuthService } from "src/auth/service/auth.service";
 import { Payload } from "src/auth/model/payload";
 
 @Injectable()

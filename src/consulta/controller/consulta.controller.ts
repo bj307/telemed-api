@@ -1,7 +1,7 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, HttpException, HttpStatus, NotFoundException } from '@nestjs/common';
-import { ConsultaService } from './consulta.service';
-import { CreateConsultaDto } from './dto/create-consulta.dto';
-import { UpdateConsultaDto } from './dto/update-consulta.dto';
+import { Controller, Get, Post, Body, Param, Delete, Put, HttpException, HttpStatus, NotFoundException, Req } from '@nestjs/common';
+import { ConsultaService } from '../service/consulta.service';
+import { CreateConsultaDto } from '../dto/create-consulta.dto';
+import { UpdateConsultaDto } from '../dto/update-consulta.dto';
 
 @Controller('consulta')
 export class ConsultaController {
@@ -9,8 +9,7 @@ export class ConsultaController {
   constructor(private readonly consultaService: ConsultaService) { }
 
   @Post()
-  //@Roles(Role.PACIENTE, Role.MEDICO)
-  async create(@Body() createConsultaDto: CreateConsultaDto) {
+  public async create(@Body() createConsultaDto: CreateConsultaDto) {
 
     const consulta = await this.consultaService.criarConsulta(createConsultaDto);
     if (!consulta) {
@@ -20,14 +19,12 @@ export class ConsultaController {
   }
 
   @Get()
-  //@Roles(Role.PACIENTE, Role.MEDICO)
-  async findAll() {
+  public async findAll() {
     return await this.consultaService.listarConsultas();
   }
 
   @Get(':id')
-  //@Roles(Role.PACIENTE, Role.MEDICO)
-  async findByID(@Param('id') id: string) {
+  public async findByID(@Param('id') id: string) {
     const consulta = await this.consultaService.buscarConsultaPorId(id);
     console.log(consulta);
     if (!consulta) {
@@ -36,9 +33,10 @@ export class ConsultaController {
     return consulta;
   }
 
+
   @Put(':id')
-  //@Roles(Role.PACIENTE, Role.MEDICO)
-  async update(@Param('id') id: string, @Body() updateConsultaDto: UpdateConsultaDto) {
+  public async update(@Param('id') id: string,
+    @Body() updateConsultaDto: UpdateConsultaDto) {
     const consulta = await this.consultaService.atualizarConsulta(id, updateConsultaDto);
     if (!consulta) {
       throw new HttpException('Erro ao atualizar a consulta', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -47,15 +45,14 @@ export class ConsultaController {
   }
 
   @Delete(':id')
-  //@Roles(Role.PACIENTE, Role.MEDICO)
-  async remove(@Param('id') id: string) {
+  public async remove(@Param('id') id: string) {
 
     try {
       const consulta = await this.consultaService.removerConsulta(id);
     } catch (error) {
-        if (error instanceof NotFoundException) {
-          throw new NotFoundException(error.message);
-        }
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException(error.message);
+      }
       throw new HttpException('Erro ao deletar a consulta', HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

@@ -1,7 +1,7 @@
 import { Module, forwardRef } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { AuthController } from './auth.controller';
-import { PacienteService } from 'src/paciente/paciente.service';
+import { AuthService } from './service/auth.service';
+import { AuthController } from './controller/auth.controller';
+import { PacienteService } from 'src/paciente/service/paciente.service';
 import { JwtModule } from '@nestjs/jwt';
 import { MedicoModule } from 'src/medico/medico.module';
 import * as dotenv from 'dotenv';
@@ -10,7 +10,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { LocalStrategy } from './strategy/local.strategy';
 import { RolesGuard } from './guards/roles.guard';
 import { AdmModule } from 'src/adm/adm.module';
-import { AdmService } from 'src/adm/adm.service';
+import { AdmService } from 'src/adm/service/adm.service';
 
 dotenv.config();
 

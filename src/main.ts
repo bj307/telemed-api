@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as admin from 'firebase-admin';
 import * as dotenv from 'dotenv';
-import { ValidationPipe } from '@nestjs/common';
+import { InternalServerErrorException, ServiceUnavailableException, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { IoAdapter } from '@nestjs/platform-socket.io';
 
@@ -13,29 +13,29 @@ class MyIoAdapter extends IoAdapter {
       ...options,
       cors: {
         origin: "*",
-        methods: ["GET", "POST"]
+        methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"]
       }
     };
     return super.createIOServer(port, options);
   }
-}
+} 
 
 async function bootstrap() {
   
-  dotenv.config();
+  dotenv.config();  
      
   //conexao com o firebase
   const fireConnect = process.env.FIRE_CONNECT;
 
   if (!fireConnect) {
-    throw new Error('FIRE_CONNECT is not defined');
+    throw new ServiceUnavailableException('FIRE_CONNECT is not defined');
   }
 
   let serviceAccount;
   try {
     serviceAccount = JSON.parse(fireConnect);
   } catch (error) {
-    throw new Error('Failed to parse FIRE_CONNECT');
+    throw new ServiceUnavailableException('Failed to parse FIRE_CONNECT');
   }
 
   admin.initializeApp({

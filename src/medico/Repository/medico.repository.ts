@@ -1,12 +1,13 @@
 import {
   InternalServerErrorException,
-  NotFoundException,
+  NotFoundException, UnauthorizedException,
 } from '@nestjs/common';
 import * as admin from 'firebase-admin';
 import * as bcrypt from 'bcrypt';
 import { CreateMedicoDto } from '../dto/create-medico.dto';
 import { UpdateMedicoDto } from '../dto/update-medico.dto';
 import { MedicoResponseDto } from '../dto/response-medico.dto';
+import { MedicoNotFoundException } from '../exception/medicoNotFound';
 
 export class MedicoRepository {
   private readonly db: FirebaseFirestore.Firestore;
@@ -50,15 +51,15 @@ export class MedicoRepository {
       const medicos = await Promise.all(medicosPromises);
       return medicos;
     } catch (error) {
-      throw new InternalServerErrorException('Erro ao listar os médicos');
+      throw new InternalServerErrorException('Erro ao listar os médicos, não tem cadastro de médicos.');
     }
   }
 
-  async buscarID(id: string) {
+  async buscarID(id: string): Promise<MedicoResponseDto> {
     try {
       const snapshot = await this.db.collection(this.collection).doc(id).get();
       if (!snapshot.exists) {
-        throw new NotFoundException('Médico não encontrado');
+        throw new MedicoNotFoundException(id);
       }
       const medico = snapshot.data();
       return {
@@ -73,7 +74,7 @@ export class MedicoRepository {
       } as MedicoResponseDto;
 
     } catch (error) {
-      if (error instanceof NotFoundException) {
+      if (error instanceof MedicoNotFoundException) {
         throw error;
       }
       throw new InternalServerErrorException('Erro ao buscar o médico');
@@ -86,7 +87,7 @@ export class MedicoRepository {
       const doc = await docRef.get();
 
       if (!doc.exists) {
-        throw new NotFoundException('Médico não encontrado');
+        throw new MedicoNotFoundException('Médico não encontrado');
       }
 
       if (updateMedicoDto.senha) {
@@ -99,7 +100,10 @@ export class MedicoRepository {
 
       return this.buscarID(id);
     } catch (error) {
-      throw new InternalServerErrorException('Erro ao atualizar o médico');
+      if (error instanceof MedicoNotFoundException) {
+        throw MedicoNotFoundException;
+      }
+      throw new InternalServerErrorException();
     }
   }
 
@@ -108,7 +112,7 @@ export class MedicoRepository {
     const doc = await docRef.get();
 
     if (!doc.exists) {
-      throw new NotFoundException('Médico não encontrado');
+      throw new MedicoNotFoundException('Médico não encontrado');
     }
 
     await docRef.delete();
@@ -120,18 +124,20 @@ export class MedicoRepository {
         .collection(this.collection)
         .where('email', '==', email)
         .get();
+        console.log(snapshot.empty ? null : snapshot);
+
       if (snapshot.empty) {
         return null;
       }
-
       const doc = snapshot.docs[0];
 
       const data = doc.data();
       data.id = doc.id;
-
+      console.log(data);
       return data;
 
     } catch (error) {
+      console.log('Erro ao buscar médico:', error);
       throw new InternalServerErrorException(
         'Erro ao buscar o médico pelo email',
       );
@@ -145,7 +151,7 @@ export class MedicoRepository {
         .where('cpf', '==', cpf)
         .get();
       if (snapshot.empty) {
-        return null;
+       return null;
       }
 
       const doc = snapshot.docs[0];

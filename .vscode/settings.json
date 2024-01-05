@@ -3,5 +3,6 @@
     "activityBar.background": "#0D3239",
     "titleBar.activeBackground": "#134650",
     "titleBar.activeForeground": "#F4FBFD"
-  }
+  },
+  "DockerRun.DisableDockerrc": true
 }

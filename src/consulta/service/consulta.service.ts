@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException, BadRequestException, ConflictException } from '@nestjs/common';
-import { ConsultaRepository } from './repository/consulta.repository';
-import { CreateConsultaDto } from './dto/create-consulta.dto';
-import { UpdateConsultaDto } from './dto/update-consulta.dto';
-import { MedicoService } from 'src/medico/medico.service';
-import { MedicacaoService } from 'src/medicacao/medicacao.service';
-import { PacienteService } from 'src/paciente/paciente.service';
-import { ResponseConsulta } from './dto/response-consulta.dto';
+import { ConsultaRepository } from '../repository/consulta.repository';
+import { CreateConsultaDto } from '../dto/create-consulta.dto';
+import { UpdateConsultaDto } from '../dto/update-consulta.dto';
+import { MedicoService } from 'src/medico/service/medico.service';
+import { MedicacaoService } from 'src/medicacao/service/medicacao.service';
+import { PacienteService } from 'src/paciente/service/paciente.service';
+import { ResponseConsulta } from '../dto/response-consulta.dto';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()

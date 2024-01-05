@@ -2,7 +2,8 @@ import { UpdateMedicacaoDto } from './../dto/update-medicacao.dto';
 import * as admin from 'firebase-admin';
 import { CreateMedicacaoDto } from '../dto/create-medicacao.dto';
 import { ResponseMedicacaoDto } from '../dto/response.medicacao.dto';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { MedicacaoNotFoundException } from '../exception/MedicacaoNotFoundException';
+import { InternalServerErrorException } from '@nestjs/common';
 
 export class MedicacaoRepository {
 
@@ -15,62 +16,53 @@ export class MedicacaoRepository {
   }
 
   async createMedicacao(createMedicacaoDto: CreateMedicacaoDto) {
-    if (!createMedicacaoDto) {
-      throw new BadRequestException();
-    }
-
     try {
       const medicacaoRef = await this.db.collection(this.collectionName).add(createMedicacaoDto);
       return this.buscarID(medicacaoRef.id);
     } catch (error) {
-      throw new Error(`Erro ao criar medicação: ${error.message}`);
+      throw new InternalServerErrorException();
     }
   }
 
   async listar() {
     try {
       const snapshot = await this.db.collection(this.collectionName).get();
-      return snapshot.docs.map(doc => {
-        const medicacao = doc.data();
-        return {
-          id: doc.id,
-          remedio: medicacao.remedio,
-          uso: medicacao.uso,
-          dosagem: medicacao.dosagem
-        } as ResponseMedicacaoDto;
+      const medicacaoPromises: Promise<ResponseMedicacaoDto>[] = [];
+
+      snapshot.forEach(async (doc) => {
+        const medicacaoPromise = this.buscarID(doc.id);
+        medicacaoPromises.push(medicacaoPromise);
       });
+
+      const medicacaos = await Promise.all(medicacaoPromises);
+      return medicacaos;
     } catch (error) {
-      throw new Error(`Erro ao listar medicação: ${error.message}`);
+      throw new InternalServerErrorException();
     }
   }
 
   async buscarID(id: string) {
-    if (!id) {
-      throw new BadRequestException();
-    }
     try {
-      const medicacaoSnapshot = await this.db.collection(this.collectionName)
-        .doc(id).get();
+      const medicacaoSnapshot = await this.db.collection(this.collectionName).doc(id).get();
       if (!medicacaoSnapshot.exists) {
-        throw new NotFoundException(id);
+        throw new MedicacaoNotFoundException(`Medicação com ID ${id} não encontrada`);
       }
       return medicacaoSnapshot.data();
     } catch (error) {
-      throw new Error(`Erro ao buscar medicação por ID: ${error.message}`);
+      if (error instanceof MedicacaoNotFoundException) {
+        throw MedicacaoNotFoundException;
+      }
+      throw new InternalServerErrorException();
     }
   }
 
   async updateMedicacao(id: string, medicacaoAtualizacao: UpdateMedicacaoDto) {
-    if (!id || !medicacaoAtualizacao) {
-      throw new BadRequestException();
-    }
-
+   
     try {
       const medicacaoRef = await this.db.collection(this.collectionName).doc(id);
       const doc = await medicacaoRef.get();
-
       if (!doc.exists) {
-        throw new NotFoundException(id);
+        throw new MedicacaoNotFoundException(id);
       }
 
       await medicacaoRef.update({
@@ -79,27 +71,29 @@ export class MedicacaoRepository {
 
       return this.buscarID(id);
     } catch (error) {
-      throw new Error(`Erro ao atualizar medicação: ${error.message}`);
+      if (error instanceof MedicacaoNotFoundException) {
+        throw MedicacaoNotFoundException;
+      }
+      throw new InternalServerErrorException();
     }
   }
 
   async deleteMedicacao(id: string) {
-    if (!id) {
-      throw new BadRequestException();
-    }
-
     try {
       const medicacaoRef = await this.db.collection(this.collectionName).doc(id);
       const doc = await medicacaoRef.get();
-
       if (!doc.exists) {
-        throw new NotFoundException(id);
+        throw new MedicacaoNotFoundException(id);
       }
 
       await medicacaoRef.delete();
+
       return { id };
     } catch (error) {
-      throw new Error(`Erro ao deletar medicação: ${error.message}`);
+      if (error instanceof MedicacaoNotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException();
     }
   }
 }

@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePacienteDto } from './dto/create-paciente.dto';
-import { UpdatePacienteDto } from './dto/update-paciente.dto';
+import { CreatePacienteDto } from '../dto/create-paciente.dto';
+import { UpdatePacienteDto } from '../dto/update-paciente.dto';
 import * as admin from 'firebase-admin';
 import * as bcrypt from 'bcrypt';
-import { ShowPacienteDto } from './dto/show-paciente.dto';
+import { ShowPacienteDto } from '../dto/show-paciente.dto';
 
 @Injectable()
 export class PacienteService {
